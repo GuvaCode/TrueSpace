@@ -5,7 +5,7 @@
     <BuildModes Active="Default"/>
     <Units>
       <Unit>
-        <Filename Value="fplite.lpr"/>
+        <Filename Value="true_space.lpr"/>
         <IsPartOfProject Value="True"/>
         <CursorPos X="14" Y="10"/>
         <UsageCount Value="86"/>
@@ -27,8 +27,8 @@
         <UnitName Value="SpaceEngine"/>
         <IsVisibleTab Value="True"/>
         <EditorIndex Value="2"/>
-        <TopLine Value="1000"/>
-        <CursorPos X="27" Y="1011"/>
+        <TopLine Value="64"/>
+        <CursorPos X="39" Y="80"/>
         <UsageCount Value="86"/>
         <Loaded Value="True"/>
       </Unit>
@@ -240,13 +240,6 @@
     </Units>
     <JumpHistory HistoryIndex="29">
       <Position>
-        <Filename Value="../../Ray4Laz/source/raylib.pas"/>
-      </Position>
-      <Position>
-        <Filename Value="engine/spaceengine.pas"/>
-        <Caret Line="1098" Column="34" TopLine="1084"/>
-      </Position>
-      <Position>
         <Filename Value="engine/spaceengine.pas"/>
         <Caret Line="239" Column="21" TopLine="220"/>
       </Position>
@@ -357,6 +350,14 @@
       <Position>
         <Filename Value="engine/spaceengine.pas"/>
         <Caret Line="1012" Column="3" TopLine="994"/>
+      </Position>
+      <Position>
+        <Filename Value="engine/spaceengine.pas"/>
+        <Caret Line="1011" Column="27" TopLine="1000"/>
+      </Position>
+      <Position>
+        <Filename Value="engine/spaceengine.pas"/>
+        <Caret Line="1032" TopLine="993"/>
       </Position>
     </JumpHistory>
     <RunParams>

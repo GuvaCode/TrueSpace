@@ -17,9 +17,10 @@ type
   private
     Engine: TSpaceEngine;
     Ship, Ship2: TSpaceShipActor;
+
     ShipModel, ShipModel2: TModel;
     Camera: TSpaceCamera;
-    procedure ApplyInputToShip(Ship_: TSpaceActor; step: Single);
+    procedure ApplyInputToShip({%H-}Actor: TSpaceActor; step: Single);
   public
     procedure Init; override; // Init game screen
     procedure Shutdown; override; // Shutdown the game screen
@@ -33,7 +34,7 @@ implementation
 
 { TScreenSpace }
 
-procedure TScreenSpace.ApplyInputToShip(Ship_: TSpaceActor; step: Single);
+procedure TScreenSpace.ApplyInputToShip(Actor: TSpaceActor; step: Single);
 var triggerRight, triggerLeft: Single;
 begin
   ship.InputForward := 0;
@@ -92,13 +93,15 @@ begin
 
   Camera := TSpaceCamera.Create(True, 50);
 
-  ShipModel := LoadModel(GetAppDir('data' + '/models/ships/bomber_01.glb'));
-  ShipModel2 := LoadModel(GetAppDir('data' + '/models/ships/bomber_01.glb'));
+  ShipModel := LoadModel(GetAppDir('data' + '/models/ships/arc_cobra_mk3.glb'));
+  ShipModel2 := LoadModel(GetAppDir('data' + '/models/ships/arc_adder.glb'));
+
+
 
   Ship := TSpaceShipActor.Create(Engine);
   Ship.ActorModel := ShipModel;
   Ship.DoCollision := True;
-  //Ship.Scale:=3;
+  Ship.ShipType:=stCobraMk3;
 
   Ship2 := TSpaceShipActor.Create(Engine);
   Ship2.ActorModel := ShipModel2;
@@ -106,93 +109,7 @@ begin
   Ship2.DoCollision:= TRUE;
 
 
-  Ship.EngineLeftPoint[0] := Vector3Create( Ship.ActorModel.meshes[2].vertices[0],
-                                            Ship.ActorModel.meshes[2].vertices[1],
-                                            Ship.ActorModel.meshes[2].vertices[2]);
-
-
-  Ship.EngineRightPoint[0] := Vector3Create( Ship.ActorModel.meshes[2].vertices[9],
-                                             Ship.ActorModel.meshes[2].vertices[10],
-                                             Ship.ActorModel.meshes[2].vertices[11]);
-
-
-  Ship.EngineLeftPoint[1] := Vector3Create( Ship.ActorModel.meshes[2].vertices[9],
-                                            Ship.ActorModel.meshes[2].vertices[10],
-                                            Ship.ActorModel.meshes[2].vertices[11]);
-
-
-  Ship.EngineRightPoint[1] := Vector3Create( Ship.ActorModel.meshes[2].vertices[12],
-                                             Ship.ActorModel.meshes[2].vertices[13],
-                                             Ship.ActorModel.meshes[2].vertices[14]);
-
-  Ship.EngineLeftPoint[2] := Vector3Create( Ship.ActorModel.meshes[2].vertices[12],
-                                            Ship.ActorModel.meshes[2].vertices[13],
-                                            Ship.ActorModel.meshes[2].vertices[14]);
-
-
-  Ship.EngineRightPoint[2] := Vector3Create( Ship.ActorModel.meshes[2].vertices[15],
-                                             Ship.ActorModel.meshes[2].vertices[16],
-                                             Ship.ActorModel.meshes[2].vertices[17]);
-
-  Ship.EngineLeftPoint[3] := Vector3Create( Ship.ActorModel.meshes[2].vertices[15],
-                                            Ship.ActorModel.meshes[2].vertices[16],
-                                            Ship.ActorModel.meshes[2].vertices[17]);
-
-
-  Ship.EngineRightPoint[3] := Vector3Create( Ship.ActorModel.meshes[2].vertices[18],
-                                             Ship.ActorModel.meshes[2].vertices[19],
-                                             Ship.ActorModel.meshes[2].vertices[20]);
-
-
-  Ship.EngineLeftPoint[4] := Vector3Create( Ship.ActorModel.meshes[2].vertices[18],
-                                            Ship.ActorModel.meshes[2].vertices[19],
-                                            Ship.ActorModel.meshes[2].vertices[20]);
-
-
-  Ship.EngineRightPoint[4] := Vector3Create( Ship.ActorModel.meshes[2].vertices[21],
-                                             Ship.ActorModel.meshes[2].vertices[22],
-                                             Ship.ActorModel.meshes[2].vertices[23]);
-
-
-  Ship.EngineLeftPoint[5] := Vector3Create( Ship.ActorModel.meshes[2].vertices[21],
-                                            Ship.ActorModel.meshes[2].vertices[22],
-                                            Ship.ActorModel.meshes[2].vertices[23]);
-
-
-  Ship.EngineRightPoint[5] := Vector3Create( Ship.ActorModel.meshes[2].vertices[24],
-                                             Ship.ActorModel.meshes[2].vertices[25],
-                                             Ship.ActorModel.meshes[2].vertices[26]);
-
-  Ship.EngineLeftPoint[6] := Vector3Create( Ship.ActorModel.meshes[2].vertices[24],
-                                            Ship.ActorModel.meshes[2].vertices[25],
-                                            Ship.ActorModel.meshes[2].vertices[26]);
-
-
-  Ship.EngineRightPoint[6] := Vector3Create( Ship.ActorModel.meshes[2].vertices[3],
-                                             Ship.ActorModel.meshes[2].vertices[4],
-                                             Ship.ActorModel.meshes[2].vertices[5]);
-
-
-  Ship.EngineLeftPoint[7] := Vector3Create( Ship.ActorModel.meshes[2].vertices[3],
-                                            Ship.ActorModel.meshes[2].vertices[4],
-                                            Ship.ActorModel.meshes[2].vertices[5]);
-
-
-  Ship.EngineRightPoint[7] := Vector3Create( Ship.ActorModel.meshes[2].vertices[0],
-                                             Ship.ActorModel.meshes[2].vertices[1],
-                                             Ship.ActorModel.meshes[2].vertices[2]);
-
-
-
-  //Vector3Create( 0.10819 , -0.04508, -0.21762);
-
- // Ship.EngineLeftPoint[1]  := Vector3Create( -0.10860 , -0.04508, -0.21762);
- // Ship.EngineRightPoint[1] := Vector3Create( -0.25327 , -0.04508, -0.21762);
- {
-     for i := 0  to Fmodel.meshes[1].vertexCount -1 do
-    begin
-    vec := Vector3Create(FModel.meshes[1].vertices[i * 3],   }
-  end;
+end;
 
 procedure TScreenSpace.Shutdown;
 begin

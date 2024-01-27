@@ -13,9 +13,15 @@ type
   { TRailRung }
   PTrailRung = ^TrailRung;
   TrailRung = record
-    LeftPoint : array[0..7] of TVector3;
-    RightPoint: array[0..7] of  TVector3;
+    LeftPoint : array[0..12] of TVector3;
+    RightPoint: array[0..12] of  TVector3;
     TimeToLive: Single;
+  end;
+
+  { Timer }
+  PTimer = ^Timer;
+  Timer = record
+  Lifetime: single;
   end;
 
   { TSpaceDust }
@@ -194,32 +200,60 @@ type
   end;
 
   { TSpaceShipActor }
+  // Enumerate ship type
+  TSpaceShipType = (stNone, stAdder, stAnaconda, stAspMk2, stBoa, stBoaCuiser, stCobraMk1, stCobraMk3,
+  stFerDelance, stGecko, stKrait, stMamba, stMoray, stPython, stShuttle, stSidewinder, stTransporter,
+  stViperPatrol, stViperInspector, stWorm);
+
   TSpaceShipActor = class(TSpaceActor)
   private
+    FShipType: TSpaceShipType;
     RungCount: integer;
     RungIndex: integer;
     Rungs: array [0..16] of TrailRung;
     LastRungPosition: TVector3;
+    TrailColor: TColorB;
+    TrailLPoint: array[0..12] of TVector3;
+    TrailRPoint: array[0..12] of TVector3;
     procedure PositionActiveTrailRung();
     procedure DrawTrail;
+    procedure SetShipType(AValue: TSpaceShipType);
   public
-    TrailColor: TColorB;
-    EngineLeftPoint: array[0..7] of TVector3;
-    EngineRightPoint: array[0..7] of TVector3;
-
     constructor Create(const AParent: TSpaceEngine); override;
     procedure OnCollision(const {%H-}Actor: TSpaceActor); override;
     procedure Update(const DeltaTime: Single); override;
     procedure Render(ShowDebugAxes: Boolean; ShowDebugRay: Boolean); override;
     function GetTrailVector3(MeshIndex: Integer; V1, V2, V3: Integer): TVector3;
+    property ShipType: TSpaceShipType read FShipType write SetShipType;
   end;
 
+  procedure StartTimer(timer:PTimer; lifetime: single);
+  procedure UpdateTimer(timer: PTimer);
+  function TimerDone(timer: PTimer): boolean;
 
 
 implementation
 
 const RungDistance = 0.5;
 const RungTimeToLive = 0.5;
+
+procedure StartTimer(timer: PTimer; lifetime: single);
+begin
+  if timer <> nil then  timer^.Lifetime:=lifetime;
+end;
+
+procedure UpdateTimer(timer: PTimer);
+begin
+  // subtract this frame from the timer if it's not allready expired
+  if (timer <> nil) and (timer^.Lifetime > 0) then
+      timer^.Lifetime -= GetFrameTime;
+end;
+
+function TimerDone(timer: PTimer): boolean;
+begin
+  if timer <> nil then result:= timer^.Lifetime <= 0 else
+  result:= false;
+end;
 
 { TSpaceDust }
 constructor TSpaceDust.Create(Size: single; Count: integer);
@@ -750,12 +784,7 @@ begin
   if not FVisible then Exit;
   DrawModel(FModel, Vector3Zero, 1, White);
   //DrawTrail;
-     
-  //  vec := Vector3Create(FModel.meshes[1].vertices[24],
-   //                      FModel.meshes[1].vertices[25],
-    //                     FModel.meshes[1].vertices[26]);
 
-  //  DrawCubeV(Vector3Transform(vec, FModel.transform),Vector3Create(0.01,0.01,0.01),RED);
   if (ShowDebugAxes) then
   begin
     BeginBlendMode(BLEND_ADDITIVE);
@@ -923,10 +952,10 @@ procedure TSpaceShipActor.PositionActiveTrailRung();
 var j: integer;
 begin
   Rungs[RungIndex].TimeToLive := RungTimeToLive;
-  for j := 0 to 7 do
+  for j := 0 to 12 do
   begin
-    Rungs[RungIndex].LeftPoint[j] :=  Vector3Transform( EngineLeftPoint[j], FModel.transform);
-    Rungs[RungIndex].RightPoint[j] := Vector3Transform( EngineRightPoint[j],FModel.transform);
+    Rungs[RungIndex].LeftPoint[j] :=  Vector3Transform( TrailLPoint[j], FModel.transform);
+    Rungs[RungIndex].RightPoint[j] := Vector3Transform( TrailRPoint[j],FModel.transform);
   end;
 end;
 
@@ -946,14 +975,14 @@ begin
     color := TrailColor;
     color.a := 255 * Round(thisRung.TimeToLive / RungTimeToLive);
     fill := color;
-    fill.a := Round(color.a / 6); // alpha
+    fill.a := Round(color.a / 6);//  (RungCount -1) + i  ); // alpha
 
     // The current rung is dragged along behind the ship, so the crossbar shouldn't be drawn.
     // If the crossbar is drawn when the ship is slow, it looks weird having a line behind it.
     nextRung := Rungs[(i + 1) mod RungCount];
     if (nextRung.TimeToLive > 0) and (thisRung.TimeToLive < nextRung.TimeToLive) then
     begin
-      for j := 0 to 7 do
+      for j := 0 to 12 do
       begin
         DrawTriangle3D(thisRung.LeftPoint[j], thisRung.RightPoint[j], nextRung.LeftPoint[j], fill);
         DrawTriangle3D(nextRung.LeftPoint[j], thisRung.RightPoint[j], nextRung.RightPoint[j], fill);
@@ -969,32 +998,18 @@ begin
   EndBlendMode();
 end;
 
+procedure TSpaceShipActor.SetShipType(AValue: TSpaceShipType);
+begin
+  if FShipType=AValue then Exit;
+  FShipType:=AValue;
+ // include setting of ship
+ {$i ships_setting.inc}
+end;
+
 constructor TSpaceShipActor.Create(const AParent: TSpaceEngine);
 begin
-  FEngine := AParent;
-  FIsDead := False;
-  FVisible := True;
-  FTag := 0;
-  FScale := 1;
-
-  FPosition := Vector3Zero();
-  FVelocity := Vector3Zero();
-  FRotation := QuaternionIdentity();
-  FScale:= 1;
-  FMaxSpeed:= 20;
-  FThrottleResponse:= 10;
-  TurnRate:= 180;
-  TurnResponse:= 10;
-
-  FAlignToHorizon := True;
-
-  TrailColor:= RED;
-  RungCount:= 10;
-  LastRungPosition := Position;
-
-  Engine.Add(Self);
-
-//inherited Create(Engine);
+ Self.SetShipType(stNone);
+  inherited Create(Engine);
 
 end;
 
@@ -1024,31 +1039,19 @@ procedure TSpaceShipActor.Render(ShowDebugAxes: Boolean; ShowDebugRay: Boolean);
 begin
   inherited Render(ShowDebugAxes, ShowDebugRay);
   DrawTrail;
-  {vec := Vector3Create(FModel.meshes[1].vertices[24],
-                         FModel.meshes[1].vertices[25],
-                         FModel.meshes[1].vertices[26]);
-   }
-
-
-   DrawCubeV(Vector3Transform(GetTrailVector3(2,9,10,11)
-   ,FModel.transform),Vector3Create(0.01,0.01,0.01),RED);
-
-
-
-
-
-
-
-
-
+//  DrawCubeV(Vector3Transform(GetTrailVector3(1 , 15 , 16 , 17) ,FModel.transform),Vector3Create(0.01,0.01,0.01),RED);
 end;
 
 function TSpaceShipActor.GetTrailVector3(MeshIndex: Integer; V1, V2, V3: Integer): TVector3;
 begin
+  if MeshIndex <= FModel.meshCount-1 then
   result := Vector3Create(FModel.meshes[MeshIndex].vertices[V1],
                           FModel.meshes[MeshIndex].vertices[V2],
-                          FModel.meshes[MeshIndex].vertices[V3]);
+                          FModel.meshes[MeshIndex].vertices[V3]) else
+  TraceLog(LOG_Error,PChar('Space Engine: Mesh index lagre '));
 end;
+
+
 
 end.
 

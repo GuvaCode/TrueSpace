@@ -5,7 +5,7 @@
     <BuildModes Active="Default"/>
     <Units>
       <Unit>
-        <Filename Value="fplite.lpr"/>
+        <Filename Value="true_space.lpr"/>
         <IsPartOfProject Value="True"/>
         <CursorPos X="14" Y="10"/>
         <UsageCount Value="86"/>
@@ -25,10 +25,9 @@
         <Filename Value="engine/spaceengine.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="SpaceEngine"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="2"/>
-        <TopLine Value="1000"/>
-        <CursorPos X="27" Y="1011"/>
+        <TopLine Value="991"/>
+        <CursorPos X="31" Y="1006"/>
         <UsageCount Value="86"/>
         <Loaded Value="True"/>
       </Unit>
@@ -62,19 +61,17 @@
       <Unit>
         <Filename Value="../../GGF/src/gearengine.pas"/>
         <UnitName Value="GearEngine"/>
-        <EditorIndex Value="9"/>
+        <EditorIndex Value="-1"/>
         <TopLine Value="659"/>
         <CursorPos X="6" Y="682"/>
         <UsageCount Value="42"/>
-        <Loaded Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="../../Ray4Laz/source/raylib.pas"/>
-        <EditorIndex Value="7"/>
+        <EditorIndex Value="-1"/>
         <TopLine Value="221"/>
         <CursorPos X="108" Y="237"/>
         <UsageCount Value="42"/>
-        <Loaded Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="../../Ray4Laz/source/raymath.pas"/>
@@ -122,10 +119,9 @@
       </Unit>
       <Unit>
         <Filename Value="../../Ray4Laz/source/raylib.inc"/>
-        <EditorIndex Value="8"/>
+        <EditorIndex Value="-1"/>
         <CursorPos X="33" Y="15"/>
         <UsageCount Value="41"/>
-        <Loaded Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="../../GGF/tool/vertView/munit.pas"/>
@@ -157,11 +153,10 @@
       <Unit>
         <Filename Value="../../GGF/src/gearcollider.pas"/>
         <UnitName Value="GearCollider"/>
-        <EditorIndex Value="10"/>
-        <TopLine Value="279"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="22"/>
         <CursorPos X="3" Y="22"/>
         <UsageCount Value="38"/>
-        <Loaded Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="engine/collider.pas"/>
@@ -173,37 +168,33 @@
       </Unit>
       <Unit>
         <Filename Value="../../Ray4LazExample/Ergo/src/ergo.lpr"/>
-        <EditorIndex Value="6"/>
+        <EditorIndex Value="-1"/>
         <TopLine Value="115"/>
         <CursorPos X="9" Y="117"/>
         <UsageCount Value="35"/>
-        <Loaded Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="../../Ray4LazExample/Ergo/src/spaceship.pas"/>
         <UnitName Value="SpaceShip"/>
-        <EditorIndex Value="5"/>
-        <TopLine Value="239"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="244"/>
         <CursorPos X="21" Y="239"/>
         <UsageCount Value="35"/>
-        <Loaded Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="../../../Загрузки/grspaceengine3d.pas"/>
         <UnitName Value="GrSpaceEngine3D"/>
-        <EditorIndex Value="4"/>
+        <EditorIndex Value="-1"/>
         <TopLine Value="642"/>
         <CursorPos Y="650"/>
         <UsageCount Value="26"/>
-        <Loaded Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="../../Ray4Laz/examples/shaders/shaders_simple_mask/shaders_simple_mask.lpr"/>
-        <EditorIndex Value="3"/>
+        <EditorIndex Value="-1"/>
         <TopLine Value="47"/>
         <CursorPos X="49" Y="61"/>
         <UsageCount Value="24"/>
-        <Loaded Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="shaders/mask.inc"/>
@@ -226,9 +217,12 @@
       </Unit>
       <Unit>
         <Filename Value="engine/ships_setting.inc"/>
-        <EditorIndex Value="-1"/>
-        <TopLine Value="178"/>
-        <UsageCount Value="9"/>
+        <IsVisibleTab Value="True"/>
+        <EditorIndex Value="3"/>
+        <TopLine Value="241"/>
+        <CursorPos X="22" Y="256"/>
+        <UsageCount Value="10"/>
+        <Loaded Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="/usr/share/fpcsrc/3.2.2/rtl/objpas/classes/classesh.inc"/>
@@ -238,18 +232,7 @@
         <UsageCount Value="11"/>
       </Unit>
     </Units>
-    <JumpHistory HistoryIndex="29">
-      <Position>
-        <Filename Value="../../Ray4Laz/source/raylib.pas"/>
-      </Position>
-      <Position>
-        <Filename Value="engine/spaceengine.pas"/>
-        <Caret Line="1098" Column="34" TopLine="1084"/>
-      </Position>
-      <Position>
-        <Filename Value="engine/spaceengine.pas"/>
-        <Caret Line="239" Column="21" TopLine="220"/>
-      </Position>
+    <JumpHistory HistoryIndex="27">
       <Position>
         <Filename Value="engine/spaceengine.pas"/>
         <Caret Line="1099" Column="21" TopLine="1084"/>
@@ -339,16 +322,8 @@
         <Caret Line="105" Column="41" TopLine="97"/>
       </Position>
       <Position>
-        <Filename Value="../../Ray4Laz/source/raylib.pas"/>
-        <Caret Line="268" Column="10" TopLine="256"/>
-      </Position>
-      <Position>
         <Filename Value="screen/screenspace.pas"/>
         <Caret Line="105" Column="33" TopLine="93"/>
-      </Position>
-      <Position>
-        <Filename Value="../../Ray4Laz/source/raylib.pas"/>
-        <Caret Line="296" Column="64" TopLine="281"/>
       </Position>
       <Position>
         <Filename Value="screen/screenspace.pas"/>
@@ -357,6 +332,18 @@
       <Position>
         <Filename Value="engine/spaceengine.pas"/>
         <Caret Line="1012" Column="3" TopLine="994"/>
+      </Position>
+      <Position>
+        <Filename Value="engine/spaceengine.pas"/>
+        <Caret Line="1011" Column="27" TopLine="1000"/>
+      </Position>
+      <Position>
+        <Filename Value="engine/spaceengine.pas"/>
+        <Caret Line="1032" TopLine="993"/>
+      </Position>
+      <Position>
+        <Filename Value="engine/spaceengine.pas"/>
+        <Caret Line="1006" Column="31" TopLine="991"/>
       </Position>
     </JumpHistory>
     <RunParams>
