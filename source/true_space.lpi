@@ -43,6 +43,10 @@
         <IsPartOfProject Value="True"/>
         <UnitName Value="SpaceEngine"/>
       </Unit>
+      <Unit>
+        <Filename Value="planets/planets.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit>
     </Units>
   </ProjectOptions>
   <CompilerOptions>
@@ -52,7 +56,7 @@
     </Target>
     <SearchPaths>
       <IncludeFiles Value="$(ProjOutDir)"/>
-      <OtherUnitFiles Value="engine;extra;screen"/>
+      <OtherUnitFiles Value="engine;extra;screen;planets"/>
       <UnitOutputDirectory Value="../temp/$(TargetCPU)-$(TargetOS)"/>
     </SearchPaths>
     <Linking>

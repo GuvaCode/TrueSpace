@@ -8,7 +8,8 @@ uses
   {$IFDEF UNIX}
   CThreads,
   {$ENDIF}
-  Classes, SysUtils, CustApp, RayLib, ScreenManager, ScreenSpace, SpaceEngine;
+  Classes, SysUtils, CustApp, RayLib, ScreenManager, ScreenSpace, SpaceEngine,
+  planets;
 
 const
   // константы для экранов
