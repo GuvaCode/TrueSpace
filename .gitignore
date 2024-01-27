@@ -1,0 +1,39 @@
+
+temp/*.o
+temp/*.ppu
+temp/*.a
+temp/*.compiled
+temp/
+
+source/backup/
+source/engine/backup/
+source/extra/backup/
+source/screen/backup/ 
+source/shaders/backup/
+source/planets/backup/
+source/ships/backup/   
+source/stations/backup/ 
+source/objects/backup/ 
+
+binary/*
+!binary/resources/
+!binary/data/
+
+!libs/x86_64-linux/
+!libs/x86_64-windows/
+!libs/x86_32-windows/
+!libs/x86_32-linux/
+
+# macos
+.DS_Store
+#*.dylib
+
+# laz
+backup/
+#examples/
+lib/
+templates/standard_game/
+*.lps
+
+# GNU+Linux
+# *.so
