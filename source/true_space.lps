@@ -219,8 +219,8 @@
         <Filename Value="engine/ships_setting.inc"/>
         <IsVisibleTab Value="True"/>
         <EditorIndex Value="3"/>
-        <TopLine Value="241"/>
-        <CursorPos X="22" Y="256"/>
+        <TopLine Value="130"/>
+        <CursorPos X="9" Y="251"/>
         <UsageCount Value="10"/>
         <Loaded Value="True"/>
       </Unit>
