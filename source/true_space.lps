@@ -25,6 +25,7 @@
         <Filename Value="engine/spaceengine.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="SpaceEngine"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="2"/>
         <TopLine Value="991"/>
         <CursorPos X="31" Y="1006"/>
@@ -217,10 +218,8 @@
       </Unit>
       <Unit>
         <Filename Value="engine/ships_setting.inc"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="3"/>
-        <TopLine Value="130"/>
-        <CursorPos X="9" Y="251"/>
+        <CursorPos X="61" Y="7"/>
         <UsageCount Value="10"/>
         <Loaded Value="True"/>
       </Unit>

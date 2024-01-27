@@ -2,4 +2,4 @@
 
 Elite-style game. Written in free pascal (Lazarus)
 
-Dependencies: [Ray4Laz](https://github.com/GuvaCode/Ray4Laz) - lazarus raylib binding
+Dependencies: [Ray4Laz](https://github.com/GuvaCode/Ray4Laz) - lazarus [raylib](https://www.raylib.com) binding
