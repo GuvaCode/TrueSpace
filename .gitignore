@@ -16,8 +16,10 @@ source/stations/backup/
 source/objects/backup/ 
 
 binary/*
-!binary/resources/
-!binary/data/
+binary/resources/
+binary/data/
+
+resource/
 
 !libs/x86_64-linux/
 !libs/x86_64-windows/

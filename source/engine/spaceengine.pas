@@ -76,6 +76,7 @@ type
   private
     FActorList: TList;
     FDeadActorList: TList;
+    FDrawRadar: Boolean;
     FSkyBoxQuality: TSkyBoxQuality;
     FSpaceDust: TSpaceDust;
     FSkyBox: TModel;
@@ -98,6 +99,7 @@ type
     property Items[const Index: Integer]: TSpaceActor read GetModelActor; default;
     property Count: Integer read GetCount;
     property UsesSkyBox: Boolean read FUsesSkyBox write FUsesSkyBox;
+    property DrawRadar: Boolean read FDrawRadar write FDrawRadar;
     property SkyBoxQuality: TSkyBoxQuality read FSkyBoxQuality write FSkyBoxQuality;
   end;
 
@@ -110,6 +112,7 @@ type
     FEngine: TSpaceEngine;
     FMaxSpeed: Single;
     FModel: TModel;
+    FRadarColor: TColorB;
     FSmoothForward: Single;
     FSmoothLeft: Single;
     FSmoothUp: Single;
@@ -122,7 +125,7 @@ type
     FTag: Integer;
     FIsDead: Boolean;
     FThrottleResponse: Single;
-
+    FProject: TVector4; // projected 2d position and depth
     FTurnRate: Single;
     FTurnResponse: Single;
     FVelocity: TVector3;
@@ -182,9 +185,7 @@ type
     property Position: TVector3 read FPosition write SetPosition;
     property Rotation: TQuaternion read FRotation write FRotation;
     property Velocity: TVector3 read FVelocity write FVelocity;
-
-
-
+    property RadarColor: TColorB read FRadarColor write FRadarColor;
   published
     property IsDead: Boolean read FIsDead;
     property Visible: Boolean read FVisible write FVisible;
@@ -521,8 +522,15 @@ end;
 
 procedure TSpaceEngine.Render(Camera: TSpaceCamera; ShowDebugAxes,
   ShowDebugRay: Boolean; DustVelocity: TVector3; DustDrawDots: boolean);
-var i: Integer;
+var i ,px, py: Integer;  view, perps: TMatrix; p: TVector4;
+    hsw, hsh: single;
 begin
+  hsw := GetScreenWidth / 2.0;
+  hsh := GetScreenHeight / 2.0;
+
+  view := MatrixLookAt(camera.Camera.position, camera.Camera.target, camera.Camera.up);
+  perps := MatrixPerspective(camera.Camera.fovy, GetScreenWidth / GetScreenHeight, 0.01, 1000.0);
+
   if FUsesSkyBox then
   begin
     Camera.BeginDrawing;
@@ -536,13 +544,38 @@ begin
   end;
 
   Camera.BeginDrawing;
-    for i := 0 to FActorList.Count - 1 do
+  for i := 0 to FActorList.Count - 1 do
+  begin
     TSpaceActor(FActorList.Items[i]).Render(ShowDebugAxes,ShowDebugRay);
-    DrawGrid(10, 1.0);        // Draw a grid
-    CrosshairNear.DrawCrosshair();
-    CrosshairFar.DrawCrosshair();
-    FSpaceDust.Draw(Camera.GetPosition(), DustVelocity, DustDrawDots);
+    TSpaceActor(FActorList.Items[i]).FProject := Projection(TSpaceActor(FActorList.Items[i]).FPosition, view, perps);
+  end;
+
+  DrawGrid(10, 1.0);        // Draw a grid
+  CrosshairNear.DrawCrosshair();
+  CrosshairFar.DrawCrosshair();
+  FSpaceDust.Draw(Camera.GetPosition(), DustVelocity, DustDrawDots);
   Camera.EndDrawing;
+
+  if FDrawRadar then
+  for i := 0 to FActorList.Count - 1 do
+  begin
+    p :=  TSpaceActor(FActorList.Items[i]).FProject;
+    p.x/=p.w;
+    p.y/=p.w;
+    px := Round( hsw + p.x * (hsw / 920));
+    py := Round(GetScreenHeight - (hsh / 3 ) + p.y * (hsh / 920));
+
+    if px > GetScreenWidth then px := GetScreenWidth - 3 else
+    if px < 0 then px := 3;
+
+    if py > GetScreenHeight then py := GetScreenHeight -3 else
+    if py < 0 then py := 3;
+
+    BeginBlendMode(BLEND_ADDITIVE);
+      DrawCircle( px, py, 3, TSpaceActor(FActorList.Items[i]).FRadarColor);
+    EndBlendMode();
+  end;
+
 end;
 
 procedure TSpaceEngine.Collision;
@@ -776,6 +809,8 @@ begin
   // TODO
   FRay.direction := GetForward;
   FRay.position := Position;
+
+
 end;
 
 procedure TSpaceActor.Render(ShowDebugAxes: Boolean; ShowDebugRay: Boolean);

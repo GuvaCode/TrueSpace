@@ -7,7 +7,7 @@ unit ScreenSpace;
 interface
 
 uses
-  RayLib, RayMath, Classes, SysUtils, ScreenManager, SpaceEngine;
+  RayLib, RayMath, Classes, SysUtils, ScreenManager, SpaceEngine, Lights;
 
 type
 
@@ -19,6 +19,9 @@ type
     Ship, Ship2: TSpaceShipActor;
 
     ShipModel, ShipModel2: TModel;
+
+
+
     Camera: TSpaceCamera;
     procedure ApplyInputToShip({%H-}Actor: TSpaceActor; step: Single);
   public
@@ -29,6 +32,8 @@ type
     procedure Show; override;  // Celled when the screen is showned
     procedure Hide; override; // Celled when the screen is hidden
   end;
+
+const  GLSL_VERSION = 330;
 
 implementation
 
@@ -90,23 +95,35 @@ begin
   Engine.CrosshairFar.Create(GetAppDir('data' + '/models/hud/crosshair2.gltf'));
   Engine.UsesSkyBox := True;
   Engine.GenerateSkyBox(1024, ColorCreate(32, 32, 64, 255), 2048);
-
+  Engine.DrawRadar := True;
   Camera := TSpaceCamera.Create(True, 50);
 
-  ShipModel := LoadModel(GetAppDir('data' + '/models/ships/arc_cobra_mk3.glb'));
-  ShipModel2 := LoadModel(GetAppDir('data' + '/models/ships/arc_adder.glb'));
-
+  ShipModel := LoadModel(GetAppDir('data' + '/models/ships/bomber.glb'));
+  ShipModel2 := LoadModel(GetAppDir('data' + '/models/ships/bomber.glb'));
 
 
   Ship := TSpaceShipActor.Create(Engine);
   Ship.ActorModel := ShipModel;
   Ship.DoCollision := True;
-  Ship.ShipType:=stCobraMk3;
+
+  LightShader_init(LIGHT_POINT,Vector3Create(100,0,0), WHITE);
+
+
+
+  Ship.ActorModel.materials[0].shader := Shader;
+  Ship.ActorModel.materials[1].shader := Shader;
+  Ship.RadarColor := GREEN;
+  //cube.materials[0].shader := shader;
+
+
+  //Ship.Scale:=8;
+  //Ship.ShipType:=stCobraMk3;
 
   Ship2 := TSpaceShipActor.Create(Engine);
   Ship2.ActorModel := ShipModel2;
   Ship2.Position := Vector3Create(10,10,10);
   Ship2.DoCollision:= TRUE;
+  Ship2.RadarColor := BLUE;
 
 
 end;
@@ -123,7 +140,9 @@ begin
   Engine.Update(MoveCount, Ship.Position);
   Engine.ClearDeadActor;
   Engine.Collision;
-
+  // update the light shader with the camera view position
+  SetShaderValue(shader, shader.locs[SHADER_LOC_VECTOR_VIEW], @Camera.Camera.position.x, SHADER_UNIFORM_VEC3);
+  UpdateLightValues(shader, ToonLight);
   ApplyInputToShip(Ship, 1);
 
   Camera.FollowActor(Ship, MoveCount);
