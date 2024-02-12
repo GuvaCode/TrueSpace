@@ -16,11 +16,9 @@ type
   TScreenSpace = class(TGameScreen)
   private
     Engine: TSpaceEngine;
-    Ship, Ship2: TSpaceShipActor;
+    Ship, Ship2, Ship3: TSpaceShipActor;
 
     ShipModel, ShipModel2: TModel;
-
-
 
     Camera: TSpaceCamera;
     procedure ApplyInputToShip({%H-}Actor: TSpaceActor; step: Single);
@@ -93,30 +91,28 @@ procedure TScreenSpace.Init;
 begin
   Engine := TSpaceEngine.Create;
   Engine.CrosshairFar.Create(GetAppDir('data' + '/models/hud/crosshair2.gltf'));
+
+ // Engine.SkyBoxQuality:=SBQOriginal;
+  Engine.SetSkyBoxFileName('data/textures/skybox/cubemap.png');
+
   Engine.UsesSkyBox := True;
-  Engine.GenerateSkyBox(1024, ColorCreate(32, 32, 64, 255), 2048);
+
   Engine.DrawRadar := True;
   Camera := TSpaceCamera.Create(True, 50);
 
   ShipModel := LoadModel(GetAppDir('data' + '/models/ships/bomber.glb'));
   ShipModel2 := LoadModel(GetAppDir('data' + '/models/ships/bomber.glb'));
 
-
   Ship := TSpaceShipActor.Create(Engine);
   Ship.ActorModel := ShipModel;
   Ship.DoCollision := True;
+  Ship.RadarStrinig:='Player';
 
   LightShader_init(LIGHT_POINT,Vector3Create(100,0,0), WHITE);
 
-
-
   Ship.ActorModel.materials[0].shader := Shader;
   Ship.ActorModel.materials[1].shader := Shader;
-  Ship.RadarColor := GREEN;
-  //cube.materials[0].shader := shader;
-
-
-  //Ship.Scale:=8;
+  Ship.RadarColor := ColorCreate(0,128,0,120);
   //Ship.ShipType:=stCobraMk3;
 
   Ship2 := TSpaceShipActor.Create(Engine);
@@ -124,6 +120,14 @@ begin
   Ship2.Position := Vector3Create(10,10,10);
   Ship2.DoCollision:= TRUE;
   Ship2.RadarColor := BLUE;
+  Ship2.RadarStrinig:='Neutral';
+
+  Ship3 := TSpaceShipActor.Create(Engine);
+  Ship3.ActorModel := ShipModel2;
+  Ship3.Position := Vector3Create(-14, 30 ,-10);
+  Ship3.DoCollision:= TRUE;
+  Ship3.RadarColor := RED;
+  Ship3.RadarStrinig:='Pirate';
 
 
 end;

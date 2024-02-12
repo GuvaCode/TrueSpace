@@ -96,6 +96,7 @@ type
     procedure Clear;
     procedure ClearDeadActor;
     procedure GenerateSkyBox(Size: Integer; Color: TColorB; StarCount: Integer);
+    procedure SetSkyBoxFileName(AValue: String);
     property Items[const Index: Integer]: TSpaceActor read GetModelActor; default;
     property Count: Integer read GetCount;
     property UsesSkyBox: Boolean read FUsesSkyBox write FUsesSkyBox;
@@ -113,6 +114,7 @@ type
     FMaxSpeed: Single;
     FModel: TModel;
     FRadarColor: TColorB;
+    FRadarString: PChar;
     FSmoothForward: Single;
     FSmoothLeft: Single;
     FSmoothUp: Single;
@@ -186,6 +188,7 @@ type
     property Rotation: TQuaternion read FRotation write FRotation;
     property Velocity: TVector3 read FVelocity write FVelocity;
     property RadarColor: TColorB read FRadarColor write FRadarColor;
+    property RadarStrinig: PChar read FRadarString write FRadarString;
   published
     property IsDead: Boolean read FIsDead;
     property Visible: Boolean read FVisible write FVisible;
@@ -198,6 +201,7 @@ type
     property TurnResponse: Single read FTurnResponse write FTurnResponse default 10;
     property TurnRate: Single read FTurnRate write FTurnRate default 180;
     property AlignToHorizon: Boolean read FAlignToHorizon write FAlignToHorizon default True;
+
   end;
 
   { TSpaceShipActor }
@@ -571,11 +575,11 @@ begin
     if py > GetScreenHeight then py := GetScreenHeight -3 else
     if py < 0 then py := 3;
 
-    BeginBlendMode(BLEND_ADDITIVE);
+ //   BeginBlendMode(BLEND_ADDITIVE);
       DrawCircle( px, py, 3, TSpaceActor(FActorList.Items[i]).FRadarColor);
-    EndBlendMode();
+      DrawText(TSpaceActor(FActorList.Items[i]).FRadarString, px + 6, py - 4 ,8, TSpaceActor(FActorList.Items[i]).FRadarColor);
+      //   EndBlendMode();
   end;
-
 end;
 
 procedure TSpaceEngine.Collision;
@@ -621,6 +625,42 @@ begin
   LoadTextureCubemap(TempImage, CUBEMAP_LAYOUT_LINE_HORIZONTAL);
   UnloadImage(TempImage);
   TraceLog(LOG_Info,PChar('Space Engine: Skybox generate'));
+end;
+
+procedure TSpaceEngine.SetSkyBoxFileName(AValue: String);
+var TempImage: TImage;
+begin
+  {if not FileExists(AValue) then
+  begin
+    TraceLog(LOG_WARNING,PChar('Space Engine: File not found: ' + Avalue));
+    Exit;
+  end;}
+  TraceLog(LOG_WARNING,PChar('Space Engine: File not found: ' + Avalue));
+  TempImage.format:=PIXELFORMAT_UNCOMPRESSED_R32G32B32A32;
+  TempImage := LoadImage(GetAppDir(AValue));
+
+  case FSkyBoxQuality of
+  SBQOriginal:
+    TraceLog(LOG_Info,PChar('Space Engine: Original image quality of the skybox is used.'));
+  SBQLow:
+    begin
+      ImageResize(@TempImage, TempImage.width div 2, TempImage.height div 2);
+      TraceLog(LOG_Info,PChar('Space Engine: Low image quality of the skybox is used.'));
+    end;
+  SBQVeryLow:
+    begin
+      ImageResize(@TempImage, TempImage.width div 4, TempImage.height div 4);
+      TraceLog(LOG_Info,PChar('Space Engine:: Very low image quality of the skybox is used.'));
+    end;
+  end;
+
+  TraceLog(LOG_Info,PChar('Space Engine:: File loading: ' + Avalue));
+
+  FSkyBox.materials[0].maps[MATERIAL_MAP_CUBEMAP].texture :=
+  LoadTextureCubemap(TempImage, CUBEMAP_LAYOUT_AUTO_DETECT);
+
+  UnloadImage(TempImage);
+  TraceLog(LOG_Info,PChar('Space Engine: Image unload: ' + Avalue));
 end;
 
 { TGearSpaceActor }
@@ -744,7 +784,7 @@ end;
 procedure TSpaceActor.Update(const DeltaTime: Single);
 var forwardSpeedMultipilier, autoSteerInput, targetVisualBank: single;
     targetVelocity: TVector3;
-    transform: TMatrix; i: integer;
+    transform: TMatrix;
 begin
   // Give the ship some momentum when accelerating. Придать кораблю импульс при ускорении.
   FSmoothForward := SmoothDamp(FSmoothForward, InputForward, ThrottleResponse, deltaTime);
