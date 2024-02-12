@@ -18,8 +18,6 @@ type
     Engine: TSpaceEngine;
     Ship, Ship2, Ship3: TSpaceShipActor;
 
-    ShipModel, ShipModel2: TModel;
-
     Camera: TSpaceCamera;
     procedure ApplyInputToShip({%H-}Actor: TSpaceActor; step: Single);
   public
@@ -100,15 +98,13 @@ begin
   Engine.DrawRadar := True;
   Camera := TSpaceCamera.Create(True, 50);
 
-  ShipModel := LoadModel(GetAppDir('data' + '/models/ships/bomber.glb'));
-  ShipModel2 := LoadModel(GetAppDir('data' + '/models/ships/bomber.glb'));
 
   Ship := TSpaceShipActor.Create(Engine);
-  Ship.ActorModel := ShipModel;
+  Ship.ActorModel := LoadModel(GetAppDir('data' + '/models/ships/bomber.glb'));
   Ship.DoCollision := True;
   Ship.RadarStrinig:='Player';
 
-  LightShader_init(LIGHT_POINT,Vector3Create(100,0,0), WHITE);
+  LightShader_init(LIGHT_POINT,Vector3Create(1000,0,0), WHITE);
 
   Ship.ActorModel.materials[0].shader := Shader;
   Ship.ActorModel.materials[1].shader := Shader;
@@ -116,26 +112,32 @@ begin
   //Ship.ShipType:=stCobraMk3;
 
   Ship2 := TSpaceShipActor.Create(Engine);
-  Ship2.ActorModel := ShipModel2;
-  Ship2.Position := Vector3Create(10,10,10);
+  Ship2.ActorModel := LoadModel(GetAppDir('data' + '/models/planets/planet_01.glb'));
+  Ship2.Position := Vector3Create(600,600,600);
   Ship2.DoCollision:= TRUE;
   Ship2.RadarColor := BLUE;
   Ship2.RadarStrinig:='Neutral';
+  Ship2.ActorModel.materials[0].shader := Shader;
+  Ship2.ActorModel.materials[1].shader := Shader;
+  Ship2.ActorModel.materials[1].maps[MATERIAL_MAP_DIFFUSE].color := GREEN;
+  Ship2.Scale:=0.5;
+
 
   Ship3 := TSpaceShipActor.Create(Engine);
-  Ship3.ActorModel := ShipModel2;
-  Ship3.Position := Vector3Create(-14, 30 ,-10);
+  Ship3.ActorModel := LoadModel(GetAppDir('data' + '/models/planets/planet_01.glb'));
+  Ship3.Position := Vector3Create(-140, 300 ,-300);
   Ship3.DoCollision:= TRUE;
   Ship3.RadarColor := RED;
   Ship3.RadarStrinig:='Pirate';
-
-
+  Ship3.ActorModel.materials[0].maps[MATERIAL_MAP_DIFFUSE].color := BLUE;
+  Ship3.ActorModel.materials[1].maps[MATERIAL_MAP_DIFFUSE].color := BLUE;
+  Ship3.Scale:=0.5;
 end;
 
 procedure TScreenSpace.Shutdown;
 begin
   Engine.Destroy;
-  UnloadModel(ShipModel);
+ // UnloadModel(ShipModel);
 
 end;
 

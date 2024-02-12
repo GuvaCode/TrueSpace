@@ -722,6 +722,7 @@ destructor TSpaceActor.Destroy;
 begin
   Engine.Remove(Self);
   Engine.FDeadActorList.Remove(Self);
+  UnloadModel(Self.ActorModel);
   inherited Destroy;
 end;
 
@@ -735,8 +736,6 @@ procedure TSpaceActor.Collision(const Other: TSpaceActor);
 var IsCollide: Boolean; Correction: TVector3;
 begin
   IsCollide := false;
-
-
 
   SetColliderRotation(@FCollider, FVisualRotation);
   SetColliderTranslation(@FCollider, FPosition);
@@ -840,7 +839,6 @@ begin
   transform := MatrixMultiply(QuaternionToMatrix(FvisualRotation), transform);
   transform := MatrixMultiply(MatrixScale(Scale,Scale,Scale),transform);
   //FModel.transform := transform;
-
   SetColliderRotation(@self.FCollider, FvisualRotation);
   SetColliderTranslation(@self.FCollider, Self.FPosition);
 
@@ -849,8 +847,6 @@ begin
   // TODO
   FRay.direction := GetForward;
   FRay.position := Position;
-
-
 end;
 
 procedure TSpaceActor.Render(ShowDebugAxes: Boolean; ShowDebugRay: Boolean);
@@ -910,8 +906,6 @@ begin
   for i:=0 to FModel.materialCount-1  do
   FModel.materials[i].shader := Shader;
 end;
-
-
 
 function TSpaceActor.GetForward: TVector3;
 begin

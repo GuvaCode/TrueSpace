@@ -36,7 +36,7 @@ begin
   inherited Create(TheOwner);
 
  InitWindow(GetScreenWidth, GetScreenHeight, AppTitle); // for window settings, look at example - window flags
- SetWindowState(FLAG_FULLSCREEN_MODE{or FLAG_VSYNC_HINT});
+ SetWindowState(FLAG_MSAA_4X_HINT{or FLAG_VSYNC_HINT});
   //SetTargetFPS(60); // Set our game to run at 60 frames-per-second
 
 
