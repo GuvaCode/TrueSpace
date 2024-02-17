@@ -8,13 +8,9 @@ uses
   {$IFDEF UNIX}
   CThreads,
   {$ENDIF}
-  Classes, SysUtils, CustApp, RayLib, ScreenManager, ScreenSpace, SpaceEngine,
-  planets;
-
-const
-  // константы для экранов
-  //SCREEN_MAINMENU = $0001;
-  SCREEN_SPACE = $0002;
+  Classes, SysUtils, CustApp, RayLib,
+  ScreenManager, ScreenSpace, ScreenLoading, SpaceEngine,
+  Global, Ships;
 
 type
   { TRayApplication }
@@ -29,45 +25,52 @@ type
 
   const AppTitle = 'raylib - basic window';
 
+
 { TRayApplication }
 
 constructor TRayApplication.Create(TheOwner: TComponent);
 begin
   inherited Create(TheOwner);
 
- InitWindow(GetScreenWidth, GetScreenHeight, AppTitle); // for window settings, look at example - window flags
- SetWindowState(FLAG_MSAA_4X_HINT{or FLAG_VSYNC_HINT});
+ InitWindow({GetScreenWidth, GetScreenHeight,} 800, 600, AppTitle); // for window settings, look at example - window flags
+ SetWindowState(FLAG_MSAA_4X_HINT {or FLAG_FULLSCREEN_MODE}{or FLAG_VSYNC_HINT});
   //SetTargetFPS(60); // Set our game to run at 60 frames-per-second
 
+ // Loading Textures model
+// Global.LoadTextures;
 
   FScreenManager := TScreenManager.Create;
-  //FScreenManager.Add(Tgamescreen_mainmenu, SCREEN_MAINMENU);
+  FScreenManager.Add(TScreenLoading, SCREEN_LOADING);
   FScreenManager.Add(TScreenSpace, SCREEN_SPACE);
-  FScreenManager.ShowScreen(SCREEN_SPACE); //Show Screen
+  FScreenManager.ShowScreen(SCREEN_LOADING); //Show Screen
 
 end;
 
 procedure TRayApplication.DoRun;
 begin
-
   while (not WindowShouldClose) do // Detect window close button or ESC key
   begin
-    // Update your variables here
-    FScreenManager.Update(GetFrameTime); // Update screen manager
+  // When data has finished loading, we set global variable
+
+  // Update your variables here
+  FScreenManager.Update(GetFrameTime); // Update screen manager
     // Draw
    // BeginDrawing();
-     // ClearBackground( ColorCreate(32, 32, 64, 255) );
-      FScreenManager.Render; // Render screen manager
+    //  ClearBackground( ColorCreate(32, 32, 64, 255) );
+  FScreenManager.Render; // Render screen manager
     //EndDrawing();
+
   end;
 
   // Stop program loop
   Terminate;
 end;
 
+
 destructor TRayApplication.Destroy;
 begin
   FScreenManager.Free;
+  UnloadTextures;
   // De-Initialization
   CloseWindow(); // Close window and OpenGL context
 

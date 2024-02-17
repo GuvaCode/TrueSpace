@@ -5,7 +5,7 @@ unit SpaceEngine;
 interface
 
 uses
-  RayLib, RayMath, RlGl, Math, DigestMath, Collider, Classes, SysUtils;
+  RayLib, RayMath, RlGl, RLights, Math, DigestMath, Collider, Global, Classes, SysUtils;
 
 type
   TSkyBoxQuality = (SBQOriginal, SBQLow, SBQVeryLow);
@@ -77,10 +77,15 @@ type
     FActorList: TList;
     FDeadActorList: TList;
     FDrawRadar: Boolean;
+    FOutlineShader: Boolean;
     FSkyBoxQuality: TSkyBoxQuality;
     FSpaceDust: TSpaceDust;
     FSkyBox: TModel;
     FUsesSkyBox: Boolean;
+    FNormShader, FOutline, FLightShader: TShader;
+    FLight: TLight;
+    FTarget: TRenderTexture2D;
+
     function GetCount: Integer;
     function GetModelActor(const Index: Integer): TSpaceActor;
   public
@@ -96,12 +101,16 @@ type
     procedure Clear;
     procedure ClearDeadActor;
     procedure GenerateSkyBox(Size: Integer; Color: TColorB; StarCount: Integer);
+    procedure GenerateSkyBoxTexture(Filename: string);
     procedure SetSkyBoxFileName(AValue: String);
+
     property Items[const Index: Integer]: TSpaceActor read GetModelActor; default;
     property Count: Integer read GetCount;
     property UsesSkyBox: Boolean read FUsesSkyBox write FUsesSkyBox;
     property DrawRadar: Boolean read FDrawRadar write FDrawRadar;
     property SkyBoxQuality: TSkyBoxQuality read FSkyBoxQuality write FSkyBoxQuality;
+    property OutlineShader: Boolean read FOutlineShader write FOutlineShader;
+
   end;
 
   { TSpaceActor }
@@ -150,7 +159,6 @@ type
 
     constructor Create(const AParent: TSpaceEngine); virtual;
     destructor Destroy; override;
-    procedure Assign(const {%H-}Value: TSpaceActor); virtual;
     procedure Collision(const Other: TSpaceActor); overload; virtual;
     procedure Collision; overload; virtual;
     procedure Dead; virtual;
@@ -178,11 +186,13 @@ type
     function GetDown(Distance: Single): TVector3;
 
     function TransformPoint(point: TVector3): TVector3;
+    function VectorFromMesh(MeshNumber: integer; VertexNumber: integer): TVector3;
+
     procedure RotateLocalEuler(axis: TVector3; degrees: single);
     procedure RotationToActor(targetActor: TSpaceActor; z_axis: boolean = false; deflection: Single = 0.05);
     procedure RotationToVector(target: TVector3; z_axis: boolean = false; deflection: Single = 0.05);
     property ActorModel: TModel read FModel write SetModel;
-
+    property MatixTransform: TMatrix read FModel.transform write FModel.transform;
     property Engine: TSpaceEngine read FEngine write FEngine;
     property Position: TVector3 read FPosition write SetPosition;
     property Rotation: TQuaternion read FRotation write FRotation;
@@ -205,31 +215,28 @@ type
   end;
 
   { TSpaceShipActor }
-  // Enumerate ship type
-  TSpaceShipType = (stNone, stAdder, stAnaconda, stAspMk2, stBoa, stBoaCuiser, stCobraMk1, stCobraMk3,
-  stFerDelance, stGecko, stKrait, stMamba, stMoray, stPython, stShuttle, stSidewinder, stTransporter,
-  stViperPatrol, stViperInspector, stWorm);
-
   TSpaceShipActor = class(TSpaceActor)
   private
-    FShipType: TSpaceShipType;
     RungCount: integer;
     RungIndex: integer;
     Rungs: array [0..16] of TrailRung;
     LastRungPosition: TVector3;
-    TrailColor: TColorB;
-    TrailLPoint: array[0..12] of TVector3;
-    TrailRPoint: array[0..12] of TVector3;
+    FTrailColor: TColorB;
+    FTrailLPoint: array[0..12] of TVector3;
+    FTrailRPoint: array[0..12] of TVector3;
+    FTrailEngineBright: Single;
     procedure PositionActiveTrailRung();
     procedure DrawTrail;
-    procedure SetShipType(AValue: TSpaceShipType);
   public
     constructor Create(const AParent: TSpaceEngine); override;
     procedure OnCollision(const {%H-}Actor: TSpaceActor); override;
     procedure Update(const DeltaTime: Single); override;
     procedure Render(ShowDebugAxes: Boolean; ShowDebugRay: Boolean); override;
+    procedure SetTrailLeftPoint(NumberPoint: Integer; Mesh: Integer; PointValue: TVector3);
+    procedure SetTrailRightPoint(NumberPoint: Integer; Mesh: Integer; PointValue: TVector3);
+    procedure SetTrailPointVector3(PointNumber, MeshNumber: Integer; TrailLeftVector, TrailRightVector: TVector3);
     function GetTrailVector3(MeshIndex: Integer; V1, V2, V3: Integer): TVector3;
-    property ShipType: TSpaceShipType read FShipType write SetShipType;
+    property TrailColor: TColorB read FTrailColor write FTrailColor;
   end;
 
   procedure StartTimer(timer:PTimer; lifetime: single);
@@ -443,8 +450,10 @@ end;
 constructor TSpaceEngine.Create;
 var CubeMesh: TMesh;
     skyboxVs, skyboxFs: PChar;
+    toonFs, toonVs, normFs, normVs, outlineFs: PChar;
     SkyBoxMap: Integer = MATERIAL_MAP_CUBEMAP;
     UsesHDR: Boolean = False;
+    atlasNumber: integer;
 begin
   FActorList := TList.Create;
   FDeadActorList := TList.Create;
@@ -457,8 +466,8 @@ begin
   FSkyBoxQuality := SBQOriginal;
   FUsesSkyBox := false;
 
+  // skybox shader
   {$I ../shaders/skybox.inc}
-
   FSkyBox.materials[0].shader := LoadShaderFromMemory(SkyBoxVs, SkyBoxFs);
   TraceLog(LOG_Info,PChar('Space Engine: Shader skybox load.'));
   SkyBoxMap := MATERIAL_MAP_CUBEMAP;
@@ -470,6 +479,26 @@ begin
   SetShaderValue(FSkyBox.materials[0].shader,
   GetShaderLocation(FSkyBox.materials[0].shader, 'vflipped'),
   @UsesHDR, SHADER_UNIFORM_INT);
+
+
+  // normal shader
+  {$I ../shaders/toon_light.inc}
+  FNormShader := LoadShaderFromMemory(normVs, normFs);
+  FNormShader.locs[SHADER_LOC_MATRIX_MODEL] := GetShaderLocation(FNormShader, 'matModel');
+
+  // outline shader
+  FOutline := LoadShaderFromMemory(nil, outlineFs);
+
+  // lighting shader
+  FLightShader := LoadShaderFromMemory(toonVs, toonFs);
+  FLightShader.locs[SHADER_LOC_MATRIX_MODEL] := GetShaderLocation(FLightShader, 'matModel');
+
+
+  // make a light (max 4 but we're only using 1)   // todo set light position
+  FLight := CreateLight(LIGHT_POINT, Vector3Create( 2,4,4 ), Vector3Zero(), WHITE, FLightShader);
+  FTarget := LoadRenderTexture(GetScreenWidth, GetScreenHeight);
+
+
 end;
 
 destructor TSpaceEngine.Destroy;
@@ -517,6 +546,8 @@ end;
 procedure TSpaceEngine.Update(DeltaTime: Single; DustViewPosition: TVector3);
 var i: Integer;
 begin
+
+
   FSpaceDust.UpdateViewPosition(DustViewPosition);
   for i := 0 to FActorList.Count - 1 do
   begin
@@ -526,14 +557,20 @@ end;
 
 procedure TSpaceEngine.Render(Camera: TSpaceCamera; ShowDebugAxes,
   ShowDebugRay: Boolean; DustVelocity: TVector3; DustDrawDots: boolean);
-var i ,px, py: Integer;  view, perps: TMatrix; p: TVector4;
-    hsw, hsh: single;
+var i ,px, py, playerX, playerY: Integer;  view, perps: TMatrix; p: TVector4;
+    hsw, hsh: single; TestPos: TVector2;
 begin
   hsw := GetScreenWidth / 2.0;
   hsh := GetScreenHeight / 2.0;
 
   view := MatrixLookAt(camera.Camera.position, camera.Camera.target, camera.Camera.up);
   perps := MatrixPerspective(camera.Camera.fovy, GetScreenWidth / GetScreenHeight, 0.01, 1000.0);
+
+  // update the light shader with the camera view position
+  SetShaderValue(FLightShader, FLightShader.locs[SHADER_LOC_VECTOR_VIEW], @camera.Camera.position.x, SHADER_UNIFORM_VEC3);
+  SetShaderValue(FNormShader, FLightShader.locs[SHADER_LOC_VECTOR_VIEW], @camera.Camera.position.x, SHADER_UNIFORM_VEC3);
+  UpdateLightValues(FLightShader, Flight);
+  UpdateLightValues(FNormShader, Flight);
 
   if FUsesSkyBox then
   begin
@@ -547,9 +584,27 @@ begin
     Camera.EndDrawing;
   end;
 
+
+ // render first to the normals texture for outlining
+ // to a texture
+ BeginTextureMode(FTarget);
+     ClearBackground(ColorCreate(255,255,255,255));
+     Camera.BeginDrawing;
+     for i := 0 to FActorList.Count - 1 do
+     begin
+       TSpaceActor(FActorList.Items[i]).SetShader(FNormShader);
+       TSpaceActor(FActorList.Items[i]).Render(ShowDebugAxes,ShowDebugRay);
+       TSpaceActor(FActorList.Items[i]).FProject := Projection(TSpaceActor(FActorList.Items[i]).FPosition, view, perps);
+     end;
+     Camera.EndDrawing;
+ EndTextureMode();
+
+
   Camera.BeginDrawing;
+
   for i := 0 to FActorList.Count - 1 do
   begin
+    TSpaceActor(FActorList.Items[i]).SetShader(FLightShader);
     TSpaceActor(FActorList.Items[i]).Render(ShowDebugAxes,ShowDebugRay);
     TSpaceActor(FActorList.Items[i]).FProject := Projection(TSpaceActor(FActorList.Items[i]).FPosition, view, perps);
   end;
@@ -560,6 +615,24 @@ begin
   FSpaceDust.Draw(Camera.GetPosition(), DustVelocity, DustDrawDots);
   Camera.EndDrawing;
 
+  // show the modified normals texture
+  //DrawTexturePro(Ftarget.texture,
+  //RectangleCreate( 0, 0, Ftarget.texture.width, -Ftarget.texture.height ),
+  //RectangleCreate( 0, 0, Ftarget.texture.width/8.0, Ftarget.texture.height/8.0 ),
+  //Vector2Create(0,0), 0, WHITE);
+
+
+  // outline shader uses the normal texture to overlay outlines
+ if FOutlineShader then
+ begin
+ BeginShaderMode(Foutline);
+     DrawTexturePro(Ftarget.texture,
+     RectangleCreate( 0, 0, Ftarget.texture.width, -Ftarget.texture.height ),
+     RectangleCreate( 0, 0, Ftarget.texture.width, Ftarget.texture.height ),
+     Vector2Create(0,0), 0, WHITE);
+ EndShaderMode();
+ end;
+
   if FDrawRadar then
   for i := 0 to FActorList.Count - 1 do
   begin
@@ -569,15 +642,36 @@ begin
     px := Round( hsw + p.x * (hsw / 920));
     py := Round(GetScreenHeight - (hsh / 3 ) + p.y * (hsh / 920));
 
-    if px > GetScreenWidth then px := GetScreenWidth - 3 else
-    if px < 0 then px := 3;
+    if px > GetScreenWidth then px := GetScreenWidth - 30 else
+    if px < 0 then px := 30;
 
-    if py > GetScreenHeight then py := GetScreenHeight -3 else
-    if py < 0 then py := 3;
+    if py > GetScreenHeight then py := GetScreenHeight -30 else
+    if py < 0 then py := 30;
 
  //   BeginBlendMode(BLEND_ADDITIVE);
-      DrawCircle( px, py, 3, TSpaceActor(FActorList.Items[i]).FRadarColor);
-      DrawText(TSpaceActor(FActorList.Items[i]).FRadarString, px + 6, py - 4 ,8, TSpaceActor(FActorList.Items[i]).FRadarColor);
+    DrawCircle( px, py, 3, TSpaceActor(FActorList.Items[i]).FRadarColor);
+
+    //if TSpaceActor(FActorList.Items[i]).Tag = 0 then
+    //DrawText(TSpaceActor(FActorList.Items[i]).FRadarString, px + 6, py - 4 ,8, TSpaceActor(FActorList.Items[i]).FRadarColor)
+    //else
+    //DrawText(PChar( IntToStr(px) + ' ' +   IntToStr(py)    ), px +6 , py -8 , 8 ,red);
+    if TSpaceActor(FActorList.Items[i]).Tag = 0 then
+    begin
+      playerY := py;
+      playerX := px;
+    end;
+    if (pY > playerY) then DrawLine(px, py ,px , py + 5, TSpaceActor(FActorList.Items[i]).FRadarColor);
+    if (pY < playerY) then DrawLine(px, py ,px , py - 5, TSpaceActor(FActorList.Items[i]).FRadarColor);
+    if (pX > playerX) then DrawLine(px, py ,px + 5 , py, TSpaceActor(FActorList.Items[i]).FRadarColor);
+    if (pX < playerX) then DrawLine(px, py ,px - 5, py, TSpaceActor(FActorList.Items[i]).FRadarColor);
+
+
+  //  TestPos :=GetWorldToScreenEX(TSpaceActor(FActorList.Items[i]).Position,Camera.Camera, GetScreenWidth,GetScreenHeight);
+  //  DrawText(PChar( IntToStr(Round(TestPos.x)) + ' ' +   IntToStr(Round(TestPos.y))    ), px +6 , py -8 , 8 ,red);
+
+    //
+
+    DrawText(TSpaceActor(FActorList.Items[i]).FRadarString, px + 8, py - 4 ,8, TSpaceActor(FActorList.Items[i]).FRadarColor);
       //   EndBlendMode();
   end;
 end;
@@ -627,15 +721,19 @@ begin
   TraceLog(LOG_Info,PChar('Space Engine: Skybox generate'));
 end;
 
+procedure TSpaceEngine.GenerateSkyBoxTexture(Filename: string);
+var TempImage: TImage;
+begin
+ TempImage := LoadImage(GetAppDir(Filename));
+ FSkyBox.materials[0].maps[MATERIAL_MAP_CUBEMAP].texture :=
+ LoadTextureCubemap(TempImage, CUBEMAP_LAYOUT_LINE_HORIZONTAL);
+ UnloadImage(TempImage);
+ TraceLog(LOG_Info,PChar('Space Engine: Skybox generate'));
+end;
+
 procedure TSpaceEngine.SetSkyBoxFileName(AValue: String);
 var TempImage: TImage;
 begin
-  {if not FileExists(AValue) then
-  begin
-    TraceLog(LOG_WARNING,PChar('Space Engine: File not found: ' + Avalue));
-    Exit;
-  end;}
-  TraceLog(LOG_WARNING,PChar('Space Engine: File not found: ' + Avalue));
   TempImage.format:=PIXELFORMAT_UNCOMPRESSED_R32G32B32A32;
   TempImage := LoadImage(GetAppDir(AValue));
 
@@ -663,13 +761,15 @@ begin
   TraceLog(LOG_Info,PChar('Space Engine: Image unload: ' + Avalue));
 end;
 
+
+
 { TGearSpaceActor }
 
 procedure TSpaceActor.SetModel(AValue: TModel);
 begin
   FModel:=AValue;
   FCollider := CreateCollider(Vector3Scale(GetModelBoundingBox(Self.FModel).min,FScale),
-               Vector3Scale(GetModelBoundingBox(Self.FModel).max,FScale));
+                              Vector3Scale(GetModelBoundingBox(Self.FModel).max,FScale));
 
   SetColliderRotation(@FCollider, FVisualRotation);
   SetColliderTranslation(@FCollider, FPosition);
@@ -722,15 +822,15 @@ destructor TSpaceActor.Destroy;
 begin
   Engine.Remove(Self);
   Engine.FDeadActorList.Remove(Self);
-  UnloadModel(Self.ActorModel);
+ // UnloadModel(Self.ActorModel);
   inherited Destroy;
 end;
-
+{
 procedure TSpaceActor.Assign(const Value: TSpaceActor);
 begin
 
 end;
-
+}
 
 procedure TSpaceActor.Collision(const Other: TSpaceActor);
 var IsCollide: Boolean; Correction: TVector3;
@@ -864,17 +964,33 @@ begin
     DrawLine3D(Position, Vector3Add(Position, GetLeft), ColorCreate( 255, 0, 0, 255 ));
     DrawLine3D(Position, Vector3Add(Position, GetUp), ColorCreate( 0, 255, 0, 255 ));
 
-    {
+  {
+    vec := Vector3Add(Vector3Scale(GetForward(), 90), Position);
+    DrawLine3D(Vector3Transform(VectorFromMesh(1,0),FModel.transform), vec,RED);
+      }
+
+     {
     for i := 0  to Fmodel.meshes[1].vertexCount -1 do
     begin
     vec := Vector3Create(FModel.meshes[1].vertices[i * 3],
                          FModel.meshes[1].vertices[i * 3 + 1],
                          FModel.meshes[1].vertices[i * 3 + 2]);
 
+      }
 
-    DrawCubeV(Vector3Transform(vec, FModel.transform),Vector3Create(0.01,0.01,0.01),RED);
+
+    //DrawCubeV(Vector3Transform(Self.GetTrailVector3(1, 0,1,2) , FModel.transform),Vector3Create(0.01,0.01,0.01),RED);
+
     //DrawSphere(Vector3Transform(vec, FModel.transform), 0.01,RED);
-    end; }
+    //end;
+    //end;
+
+   // vec := Vector3Create(FModel.meshes[1].vertices[2 * 3],
+    //                     FModel.meshes[1].vertices[2 * 3 + 1],
+     //                    FModel.meshes[1].vertices[2 * 3 + 2]);
+
+
+    DrawCubeV(Vector3Transform(vec, FModel.transform),Vector3Create(0.01,0.01,0.01),Green);
 
 
     DrawLine3D(FCollider.vertGlobal[0], FCollider.vertGlobal[1], SKYBLUE);
@@ -906,6 +1022,7 @@ begin
   for i:=0 to FModel.materialCount-1  do
   FModel.materials[i].shader := Shader;
 end;
+
 
 function TSpaceActor.GetForward: TVector3;
 begin
@@ -976,6 +1093,13 @@ begin
   result:= Vector3Transform(point, matrix);
 end;
 
+function TSpaceActor.VectorFromMesh(MeshNumber: integer; VertexNumber: integer): TVector3;
+begin
+  result := Vector3Create(FModel.meshes[MeshNumber].vertices[VertexNumber * 3],
+                          FModel.meshes[MeshNumber].vertices[VertexNumber * 3 + 1],
+                          FModel.meshes[MeshNumber].vertices[VertexNumber * 3 + 2]);
+end;
+
 procedure TSpaceActor.RotateLocalEuler(axis: TVector3; degrees: single);
 var radians: single;
 begin
@@ -1023,8 +1147,8 @@ begin
   Rungs[RungIndex].TimeToLive := RungTimeToLive;
   for j := 0 to 12 do
   begin
-    Rungs[RungIndex].LeftPoint[j] :=  Vector3Transform( TrailLPoint[j], FModel.transform);
-    Rungs[RungIndex].RightPoint[j] := Vector3Transform( TrailRPoint[j],FModel.transform);
+    Rungs[RungIndex].LeftPoint[j] :=  Vector3Transform( FTrailLPoint[j], FModel.transform);
+    Rungs[RungIndex].RightPoint[j] := Vector3Transform( FTrailRPoint[j],FModel.transform);
   end;
 end;
 
@@ -1041,16 +1165,25 @@ begin
     if (Rungs[i].TimeToLive <= 0) then continue;
     thisRung := Rungs[i mod RungCount];
 
+
     color := TrailColor;
     color.a := 255 * Round(thisRung.TimeToLive / RungTimeToLive);
+
     fill := color;
-    fill.a := Round(color.a / 6);//  (RungCount -1) + i  ); // alpha
+    fill.a := Round(color.a / 16);//  (RungCount -1) + i  ); // alpha
+
+    //color.a := Round(thisRung.TimeToLive / RungTimeToLive);
+
+
 
     // The current rung is dragged along behind the ship, so the crossbar shouldn't be drawn.
     // If the crossbar is drawn when the ship is slow, it looks weird having a line behind it.
     nextRung := Rungs[(i + 1) mod RungCount];
+
+
     if (nextRung.TimeToLive > 0) and (thisRung.TimeToLive < nextRung.TimeToLive) then
     begin
+      if FTrailEngineBright < 0.0 then FTrailEngineBright += 0.05;
       for j := 0 to 12 do
       begin
         DrawTriangle3D(thisRung.LeftPoint[j], thisRung.RightPoint[j], nextRung.LeftPoint[j], fill);
@@ -1058,8 +1191,13 @@ begin
         DrawTriangle3D(nextRung.LeftPoint[j], thisRung.RightPoint[j], thisRung.LeftPoint[j], fill);
         DrawTriangle3D(nextRung.RightPoint[j], thisRung.RightPoint[j], nextRung.LeftPoint[j], fill);
       end;
-    end;
+    end
+     else
+     if FTrailEngineBright > - 0.4 then FTrailEngineBright -= 0.05;
   end;
+
+    color := ColorContrast(fill, FTrailEngineBright);
+  ActorModel.materials[2].maps[MATERIAL_MAP_ALBEDO].color := color;   // toto ship type fix
 
   rlDrawRenderBatchActive();
   rlEnableDepthMask();
@@ -1067,13 +1205,7 @@ begin
   EndBlendMode();
 end;
 
-procedure TSpaceShipActor.SetShipType(AValue: TSpaceShipType);
-begin
-  if FShipType=AValue then Exit;
-  FShipType:=AValue;
- // include setting of ship
- {$i ships_setting.inc}
-end;
+
 
 constructor TSpaceShipActor.Create(const AParent: TSpaceEngine);
 begin
@@ -1082,7 +1214,6 @@ begin
   FVisible := True;
   FTag := 0;
   FScale := 1;
-  FShipType := stNone;
   FPosition := Vector3Zero();
   FVelocity := Vector3Zero();
   FRotation := QuaternionIdentity();
@@ -1126,7 +1257,26 @@ procedure TSpaceShipActor.Render(ShowDebugAxes: Boolean; ShowDebugRay: Boolean);
 begin
   inherited Render(ShowDebugAxes, ShowDebugRay);
   DrawTrail;
-//  DrawCubeV(Vector3Transform(GetTrailVector3(1 , 15 , 16 , 17) ,FModel.transform),Vector3Create(0.01,0.01,0.01),RED);
+ // DrawCubeV(Vector3Transform(GetTrailVector3(1 , 93 , 94 , 95) ,FModel.transform),Vector3Create(0.01,0.01,0.01),RED);
+end;
+
+procedure TSpaceShipActor.SetTrailLeftPoint(NumberPoint: Integer;
+  Mesh: Integer; PointValue: TVector3);
+begin
+  FTrailLPoint[NumberPoint] := GetTrailVector3(Mesh, Round(PointValue.x), Round(PointValue.y), Round(PointValue.z));
+end;
+
+procedure TSpaceShipActor.SetTrailRightPoint(NumberPoint: Integer;
+  Mesh: Integer; PointValue: TVector3);
+begin
+  FTrailRPoint[NumberPoint] := GetTrailVector3(Mesh, Round(PointValue.x), Round(PointValue.y), Round(PointValue.z));
+end;
+
+procedure TSpaceShipActor.SetTrailPointVector3(PointNumber,
+  MeshNumber: Integer; TrailLeftVector, TrailRightVector: TVector3);
+begin
+  FTrailLPoint[PointNumber] := GetTrailVector3(MeshNumber, Round(TrailLeftVector.x), Round(TrailLeftVector.y), Round(TrailLeftVector.z));
+  FTrailRPoint[PointNumber] := GetTrailVector3(MeshNumber, Round(TrailRightVector.x), Round(TrailRightVector.y), Round(TrailRightVector.z));
 end;
 
 function TSpaceShipActor.GetTrailVector3(MeshIndex: Integer; V1, V2, V3: Integer): TVector3;

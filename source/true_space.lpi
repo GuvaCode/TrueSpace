@@ -47,6 +47,24 @@
         <Filename Value="planets/planets.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit>
+      <Unit>
+        <Filename Value="shaders/toon_light.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit>
+      <Unit>
+        <Filename Value="engine/global.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit>
+      <Unit>
+        <Filename Value="screen/screenloading.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="ScreenLoading"/>
+      </Unit>
+      <Unit>
+        <Filename Value="ships/ships.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="Ships"/>
+      </Unit>
     </Units>
   </ProjectOptions>
   <CompilerOptions>
@@ -56,7 +74,7 @@
     </Target>
     <SearchPaths>
       <IncludeFiles Value="$(ProjOutDir)"/>
-      <OtherUnitFiles Value="engine;extra;screen;planets"/>
+      <OtherUnitFiles Value="engine;extra;screen;planets;ships"/>
       <UnitOutputDirectory Value="../temp/$(TargetCPU)-$(TargetOS)"/>
     </SearchPaths>
     <Linking>

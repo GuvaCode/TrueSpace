@@ -313,6 +313,7 @@ begin
   end
   else
   begin
+    writeln('Unknown screen');
     // raise Exception.CreateFmt('Unknown screen ident: %d', [Ident]);
   end;
   FUpdateCount := 0;

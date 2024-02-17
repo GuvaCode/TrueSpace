@@ -1,15 +1,25 @@
   case AValue of
-  stAdder:
+  stBob:
   begin
     TrailLPoint[0] := GetTrailVector3(1, 3,4,5);
-    TrailRPoint[0] := GetTrailVector3(1, 0,1,2);
-    TrailLPoint[1] := GetTrailVector3(1, 0,1,2);
-    TrailRPoint[1] := GetTrailVector3(1, 9,10,11);
-    TrailLPoint[2] := GetTrailVector3(1, 9,10,11);
-    TrailRPoint[2] := GetTrailVector3(1, 6,7,8);
-    TrailLPoint[3] := GetTrailVector3(1, 6,7,8);
-    TrailRPoint[3] := GetTrailVector3(1, 3,4,5);
-    TrailColor := ColorCreate(96, 32, 32, 255);
+    TrailRPoint[0] := GetTrailVector3(1, 21,22,23);
+    TrailLPoint[1] := GetTrailVector3(1, 6,7,8);
+    TrailRPoint[1] := GetTrailVector3(1, 15,16,17);
+    TrailLPoint[2] := GetTrailVector3(1, 27,28,29);
+    TrailRPoint[2] := GetTrailVector3(1, 45,46,47);
+    TrailLPoint[3] := GetTrailVector3(1, 30,31,32);
+    TrailRPoint[3] := GetTrailVector3(1, 39,40,41);
+    TrailLPoint[4] := GetTrailVector3(1, 54,55,56);
+    TrailRPoint[4] := GetTrailVector3(1, 63,64,65);
+    TrailLPoint[5] := GetTrailVector3(1, 57,58,59);
+    TrailRPoint[5] := GetTrailVector3(1, 69,70,71);
+    TrailLPoint[6] := GetTrailVector3(1, 78,79,80);
+    TrailRPoint[6] := GetTrailVector3(1, 87,88,89);
+    TrailLPoint[7] := GetTrailVector3(1, 81,82,83);
+    TrailRPoint[7] := GetTrailVector3(1, 93,94,95);
+
+    //TrailColor := ColorCreate(10,255,255,255)
+
   end;
 
   stAnaconda:
