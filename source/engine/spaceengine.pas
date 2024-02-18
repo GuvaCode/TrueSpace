@@ -1197,7 +1197,7 @@ begin
   end;
 
     color := ColorContrast(fill, FTrailEngineBright);
-  ActorModel.materials[2].maps[MATERIAL_MAP_ALBEDO].color := color;   // toto ship type fix
+    ActorModel.materials[2].maps[MATERIAL_MAP_ALBEDO].color := color;   // toto ship type fix
 
   rlDrawRenderBatchActive();
   rlEnableDepthMask();
@@ -1257,7 +1257,7 @@ procedure TSpaceShipActor.Render(ShowDebugAxes: Boolean; ShowDebugRay: Boolean);
 begin
   inherited Render(ShowDebugAxes, ShowDebugRay);
   DrawTrail;
- // DrawCubeV(Vector3Transform(GetTrailVector3(1 , 93 , 94 , 95) ,FModel.transform),Vector3Create(0.01,0.01,0.01),RED);
+  DrawCubeV(Vector3Transform(GetTrailVector3(1 , 93 , 94, 95) ,FModel.transform),Vector3Create(0.01,0.01,0.01),RED);
 end;
 
 procedure TSpaceShipActor.SetTrailLeftPoint(NumberPoint: Integer;

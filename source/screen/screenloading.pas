@@ -58,10 +58,10 @@ begin
     Inc(currentFrame);
     if (currentFrame > 2) then currentFrame := 0;
     frameRec.x := currentFrame*FLoadingTexture.width/3;
-
+     Randomize;
     if loadCounter <= 23 then
     begin
-      //sleep(50);
+      //sleep(Random(500));
       DataProgress := loadCounter;
       FModelAtlas[loadCounter] := LoadTexture(GetAppDir('data/textures/loading.png'));
       if IsTextureReady(FModelAtlas[loadCounter]) then Inc(loadCounter);

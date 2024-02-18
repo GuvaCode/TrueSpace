@@ -7,7 +7,7 @@ uses
   RayLib, RayMath, SpaceEngine, Global, Classes, SysUtils;
 
 type // Enumerate ship type
-  TSpaceShipType = (stNone, stChallenger);
+  TSpaceShipType = (stNone, stChallenger, stForwarder);
 
   { TSpaceShip }
 
@@ -52,18 +52,28 @@ begin
   if FShipType=AValue then Exit;
   FShipType:=AValue;
   case AValue of
-   stChallenger:
-   begin
-     SetTrailPointVector3(0,1,Vector3Create(3,4,5), Vector3Create(21,22,23));
-     SetTrailPointVector3(1,1,Vector3Create(6,7,8), Vector3Create(15,16,17));
-     SetTrailPointVector3(2,1,Vector3Create(27,28,29), Vector3Create(45,46,47));
-     SetTrailPointVector3(3,1,Vector3Create(30,31,32), Vector3Create(39,40,41));
-     SetTrailPointVector3(4,1,Vector3Create(54,55,56), Vector3Create(63,64,65));
-     SetTrailPointVector3(5,1,Vector3Create(57,58,59), Vector3Create(69,70,71));
-     SetTrailPointVector3(6,1,Vector3Create(78,79,80), Vector3Create(87,88,89));
-     SetTrailPointVector3(7,1,Vector3Create(81,82,83), Vector3Create(93,94,95));
+    stChallenger:
+    begin
+      SetTrailPointVector3(0,1,Vector3Create(3,4,5), Vector3Create(21,22,23));
+      SetTrailPointVector3(1,1,Vector3Create(6,7,8), Vector3Create(15,16,17));
+      SetTrailPointVector3(2,1,Vector3Create(27,28,29), Vector3Create(45,46,47));
+      SetTrailPointVector3(3,1,Vector3Create(30,31,32), Vector3Create(39,40,41));
+      SetTrailPointVector3(4,1,Vector3Create(54,55,56), Vector3Create(63,64,65));
+      SetTrailPointVector3(5,1,Vector3Create(57,58,59), Vector3Create(69,70,71));
+      SetTrailPointVector3(6,1,Vector3Create(78,79,80), Vector3Create(87,88,89));
+      SetTrailPointVector3(7,1,Vector3Create(81,82,83), Vector3Create(93,94,95));
    end;
-
+   stForwarder:
+   begin
+     SetTrailPointVector3(0,1,Vector3Create(3,4,5), Vector3Create(18,19,20));
+     SetTrailPointVector3(1,1,Vector3Create(9,10,11), Vector3Create(12,13,14));
+     SetTrailPointVector3(2,1,Vector3Create(36,37,38), Vector3Create(45,46,47));
+     SetTrailPointVector3(3,1,Vector3Create(39,40,41), Vector3Create(42,43,44));
+     SetTrailPointVector3(4,1,Vector3Create(48,49,50), Vector3Create(69,70,71));
+     SetTrailPointVector3(5,1,Vector3Create(54,55,56), Vector3Create(63,64,65));
+     SetTrailPointVector3(6,1,Vector3Create(84,85,86), Vector3Create(90,91,92));
+     SetTrailPointVector3(7,1,Vector3Create(87,88,89), Vector3Create(93,94,95));
+   end;
 
 
 

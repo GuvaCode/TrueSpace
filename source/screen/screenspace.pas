@@ -159,7 +159,7 @@ begin
   Ship2 := TSpaceShipActor.Create(Engine);
 
 
-  Ship2.ActorModel := LoadModel(GetAppDir('data' + '/models/ships/Challenger.glb'));
+  Ship2.ActorModel := LoadModel(GetAppDir('data' + '/models/ships/Forwarder.glb'));
   Ship2.Position := Vector3Create(10,10,10);
   Ship2.DoCollision:= TRUE;
   Ship2.RadarColor := BLUE;
@@ -172,7 +172,7 @@ begin
 
   Ship3 := TSpaceShipActor.Create(Engine);
 //  Ship3.ActorModel := Test.model;
-  Ship3.ActorModel := LoadModel(GetAppDir('data' + '/models/ships/Challenger.glb'));
+  Ship3.ActorModel := LoadModel(GetAppDir('data' + '/models/ships/Forwarder.glb'));
  // Ship3.Assign(Ship2.ActorModel);
 
 
@@ -185,7 +185,7 @@ begin
 //  Ship3.ActorModel.materials[1].maps[MATERIAL_MAP_DIFFUSE].color := BLUE;
  // Ship3.Scale:=0.5;
   Ship3.Tag:=2;
-  Ship3.Scale:=4.1;
+  //Ship3.Scale:=4.1;
  {
   LazerModel :=  LoadModel(GetAppDir('data' + '/models/ships/laser.glb'));
   Lazer:= TSpaceShipActor.Create(Engine);
