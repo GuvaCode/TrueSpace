@@ -7,7 +7,7 @@ unit ScreenSpace;
 interface
 
 uses
-  RayLib, RayMath, Classes, SysUtils, ScreenManager, SpaceEngine, Ships;
+  RayLib, RayMath, Classes, SysUtils, ScreenManager, SpaceEngine, Ships, WarpGate, Global;
 
 type
 
@@ -29,8 +29,7 @@ type
     Engine: TSpaceEngine;
     Ship: TSpaceShip;
     Ship2, Ship3: TSpaceShipActor;
-
-
+    WarpGlow: TWarpGlow;
     Camera: TSpaceCamera;
     procedure ApplyInputToShip({%H-}Actor: TSpaceActor; step: Single);
   public
@@ -131,35 +130,21 @@ begin
   Engine.DrawRadar := True;
   Camera := TSpaceCamera.Create(True, 50);
 
-
- // Test := LoadModel(GetAppDir('data' + '/models/ships/panda.glb'));
-
   Ship := TSpaceShip.Create(Engine);
-//  Ship.FModel := Test;
-
-  Ship.ActorModel := LoadModel(GetAppDir('data' + '/models/ships/Challenger.glb'));
+  Ship.ActorModel := LoadModel(GetAppDir('data' + '/models/ships/Forwarder.glb'));
   Ship.DoCollision := True;
   Ship.RadarStrinig:='Player';
-  //Ship.ShipType := stBob;
- // LightShader_init(LIGHT_POINT,Vector3Create(1000,0,0), WHITE);
-
-
-
-
-//  Ship.ActorModel.materials[0].shader := Shader;
-//  Ship.ActorModel.materials[1].shader := Shader;
   Ship.RadarColor := ColorCreate(0,128,0,120);
-  //Ship.Scale:=0.1;
-  Ship.ShipType:= stChallenger;
-  Ship.TrailColor := PINK;
- // Randomize;
- // Ship.ShipAtlas:=Random(23);
+  Ship.ShipType:= stForwarder;
+  Ship.TrailColor := BLUE;
+  Randomize;
+  //Ship.ShipTextureNumber:=5;// Random(23);
 
 
   Ship2 := TSpaceShipActor.Create(Engine);
 
 
-  Ship2.ActorModel := LoadModel(GetAppDir('data' + '/models/ships/Forwarder.glb'));
+  Ship2.ActorModel := LoadModel(GetAppDir('data' + '/models/ships/Striker.glb'));
   Ship2.Position := Vector3Create(10,10,10);
   Ship2.DoCollision:= TRUE;
   Ship2.RadarColor := BLUE;
@@ -186,6 +171,13 @@ begin
  // Ship3.Scale:=0.5;
   Ship3.Tag:=2;
   //Ship3.Scale:=4.1;
+
+
+  WarpGlow := TWarpGlow.Create(Engine);
+  WarpGlow.Position := Vector3Create(10,0,0);
+  WarpGlow.RadarColor := ORANGE;
+  WarpGlow.RadarStrinig:='WARP';
+
  {
   LazerModel :=  LoadModel(GetAppDir('data' + '/models/ships/laser.glb'));
   Lazer:= TSpaceShipActor.Create(Engine);
@@ -270,9 +262,32 @@ begin
 end;
 
 procedure TScreenSpace.Show;
+var Ship22: array [0..1] of TSpaceShip;
 begin
   inherited Show;
-  //Ship.ShipAtlas:=Random(23);
+  Ship.SetShipTexture(1, FModelAtlas[GetRandomValue(0,23)]);
+
+  Ship22[0] := TSpaceShip.Create(Engine);
+  Ship22[0].ActorModel := LoadModel(GetAppDir('data' + '/models/ships/Striker.glb'));
+  Ship22[0].Position := Vector3Create(8,8,-8);
+  Ship22[0].DoCollision:= TRUE;
+  Ship22[0].RadarColor := BLUE;
+  Ship22[0].RadarStrinig:='Neutral22';
+  Ship22[0].Scale:=5.1;
+  Ship22[0].Tag:=12;
+  Ship22[0].SetShipTexture(1, FModelAtlas[GetRandomValue(0,23)]);
+
+
+  Ship22[1] := TSpaceShip.Create(Engine);
+  Ship22[1].ActorModel := LoadModel(GetAppDir('data' + '/models/ships/Striker.glb'));
+  Ship22[1].Position := Vector3Create(8,-8,-8);
+  Ship22[1].DoCollision:= TRUE;
+  Ship22[1].RadarColor := BLUE;
+  Ship22[1].RadarStrinig:='Neutral222';
+  Ship22[1].Scale:=5.1;
+  Ship22[1].Tag:=12;
+  Ship22[1].SetShipTexture(1, FModelAtlas[GetRandomValue(0,23)]);
+  Ship22[0].SetShipTexture(1, FModelAtlas[GetRandomValue(0,23)]);
 end;
 
 procedure TScreenSpace.Hide;

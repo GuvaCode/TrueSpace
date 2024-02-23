@@ -8,8 +8,9 @@ MaskFs := '#version 330'                + #10 + #13 +
           'out vec4 finalColor;'        + #10 + #13 +
           'void main()'                 + #10 + #13 +
           '{'                           + #10 + #13 +
-          'vec4 maskColour = texture(mask, fragTexCoord + vec2(sin(-frame/150.0)/10.0, cos(-frame/170.0)/10.0));'+ #10 + #13 +
+          'vec4 maskColour = texture(mask, fragTexCoord + vec2(sin(-frame/1500.0)/10.0, cos(-frame/1700.0)/10.0));'+ #10 + #13 +
           'if (maskColour.r < 0.25) discard;'  + #10 + #13 +
-          'vec4 texelColor = texture(texture0, fragTexCoord + vec2(sin(frame/90.0)/8.0, cos(frame/60.0)/8.0));'+ #10 + #13 +
+          'vec4 texelColor = texture(texture0, fragTexCoord + vec2(sin(frame/900.0)/8.0, cos(frame/600.0)/8.0));'+ #10 + #13 +
           'finalColor = texelColor*maskColour;'+ #10 + #13 +
           '}';
+

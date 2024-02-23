@@ -65,6 +65,11 @@
         <IsPartOfProject Value="True"/>
         <UnitName Value="Ships"/>
       </Unit>
+      <Unit>
+        <Filename Value="objects/warpgate.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="WarpGate"/>
+      </Unit>
     </Units>
   </ProjectOptions>
   <CompilerOptions>
@@ -74,7 +79,7 @@
     </Target>
     <SearchPaths>
       <IncludeFiles Value="$(ProjOutDir)"/>
-      <OtherUnitFiles Value="engine;extra;screen;planets;ships"/>
+      <OtherUnitFiles Value="engine;extra;screen;planets;ships;objects"/>
       <UnitOutputDirectory Value="../temp/$(TargetCPU)-$(TargetOS)"/>
     </SearchPaths>
     <Linking>

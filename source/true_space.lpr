@@ -10,7 +10,7 @@ uses
   {$ENDIF}
   Classes, SysUtils, CustApp, RayLib,
   ScreenManager, ScreenSpace, ScreenLoading, SpaceEngine,
-  Global, Ships;
+  Global, Ships, WarpGate;
 
 type
   { TRayApplication }
@@ -33,11 +33,13 @@ begin
   inherited Create(TheOwner);
 
  InitWindow(GetScreenWidth, GetScreenHeight, AppTitle); // for window settings, look at example - window flags
- SetWindowState(FLAG_MSAA_4X_HINT {or FLAG_FULLSCREEN_MODE}{or FLAG_VSYNC_HINT});
+ SetWindowState(FLAG_MSAA_4X_HINT or FLAG_FULLSCREEN_MODE{or FLAG_VSYNC_HINT});
   //SetTargetFPS(60); // Set our game to run at 60 frames-per-second
 
  // Loading Textures model
 // Global.LoadTextures;
+
+
 
   FScreenManager := TScreenManager.Create;
   FScreenManager.Add(TScreenLoading, SCREEN_LOADING);

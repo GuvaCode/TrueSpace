@@ -61,9 +61,8 @@ begin
      Randomize;
     if loadCounter <= 23 then
     begin
-      //sleep(Random(500));
       DataProgress := loadCounter;
-      FModelAtlas[loadCounter] := LoadTexture(GetAppDir('data/textures/loading.png'));
+      FModelAtlas[loadCounter] := LoadTexture(GetAppDir('data/textures/atlas/'+IntTostr(loadCounter)+'.png'));
       if IsTextureReady(FModelAtlas[loadCounter]) then Inc(loadCounter);
     end;
 
@@ -86,7 +85,10 @@ begin
     ProgressRec := RectangleCreate(Position.x, Position.y + 125, 176 ,6);
     Progress := DataProgress;
     GuiProgressBar(ProgressRec,nil,nil, @Progress, 0, 23);
+    ProgressRec := RectangleCreate(Position.x, Position.y + 125 + 20 , 176 ,6);
 
+    GuiSetStyle(LABELS, TEXT_ALIGNMENT, TEXT_ALIGN_CENTER);
+    GuiLabel(ProgressRec, 'Loading ...');
 
     ///DrawText(PChar('LoadTexture: ' + IntTostr(LoadCounter) + ' of 24'),     {GetScreenWidth -}10  ,10  ,10  ,RAYWHITE);
   EndDrawing();

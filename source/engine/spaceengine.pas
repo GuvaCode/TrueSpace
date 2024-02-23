@@ -546,8 +546,6 @@ end;
 procedure TSpaceEngine.Update(DeltaTime: Single; DustViewPosition: TVector3);
 var i: Integer;
 begin
-
-
   FSpaceDust.UpdateViewPosition(DustViewPosition);
   for i := 0 to FActorList.Count - 1 do
   begin
@@ -567,6 +565,7 @@ begin
   perps := MatrixPerspective(camera.Camera.fovy, GetScreenWidth / GetScreenHeight, 0.01, 1000.0);
 
   // update the light shader with the camera view position
+
   SetShaderValue(FLightShader, FLightShader.locs[SHADER_LOC_VECTOR_VIEW], @camera.Camera.position.x, SHADER_UNIFORM_VEC3);
   SetShaderValue(FNormShader, FLightShader.locs[SHADER_LOC_VECTOR_VIEW], @camera.Camera.position.x, SHADER_UNIFORM_VEC3);
   UpdateLightValues(FLightShader, Flight);
@@ -587,11 +586,13 @@ begin
 
  // render first to the normals texture for outlining
  // to a texture
+
  BeginTextureMode(FTarget);
      ClearBackground(ColorCreate(255,255,255,255));
      Camera.BeginDrawing;
      for i := 0 to FActorList.Count - 1 do
      begin
+       if not TSpaceActor(FActorList.Items[i]).ClassNameIs('TWarpGlow') then
        TSpaceActor(FActorList.Items[i]).SetShader(FNormShader);
        TSpaceActor(FActorList.Items[i]).Render(ShowDebugAxes,ShowDebugRay);
        TSpaceActor(FActorList.Items[i]).FProject := Projection(TSpaceActor(FActorList.Items[i]).FPosition, view, perps);
@@ -602,17 +603,23 @@ begin
 
   Camera.BeginDrawing;
 
+  CrosshairNear.DrawCrosshair();
+  CrosshairFar.DrawCrosshair();
+
+
   for i := 0 to FActorList.Count - 1 do
   begin
+    if not TSpaceActor(FActorList.Items[i]).ClassNameIs('TWarpGlow') then
     TSpaceActor(FActorList.Items[i]).SetShader(FLightShader);
     TSpaceActor(FActorList.Items[i]).Render(ShowDebugAxes,ShowDebugRay);
     TSpaceActor(FActorList.Items[i]).FProject := Projection(TSpaceActor(FActorList.Items[i]).FPosition, view, perps);
   end;
 
   DrawGrid(10, 1.0);        // Draw a grid
-  CrosshairNear.DrawCrosshair();
-  CrosshairFar.DrawCrosshair();
+
   FSpaceDust.Draw(Camera.GetPosition(), DustVelocity, DustDrawDots);
+
+
   Camera.EndDrawing;
 
   // show the modified normals texture
@@ -801,7 +808,7 @@ begin
   FVisible := True;
   FTag := 0;
   FScale := 1;
-
+  Fmodel := Default(TModel);
   FPosition := Vector3Zero();
   FVelocity := Vector3Zero();
   FRotation := QuaternionIdentity();
@@ -1197,6 +1204,7 @@ begin
   end;
 
     color := ColorContrast(fill, FTrailEngineBright);
+
     ActorModel.materials[2].maps[MATERIAL_MAP_ALBEDO].color := color;   // toto ship type fix
 
   rlDrawRenderBatchActive();
@@ -1223,6 +1231,7 @@ begin
   TurnRate:= 180;
   TurnResponse:= 10;
   FAlignToHorizon := True;
+  FModel := Default(TModel);
 
   TrailColor:= RED;
   RungCount:= 10;
@@ -1257,7 +1266,7 @@ procedure TSpaceShipActor.Render(ShowDebugAxes: Boolean; ShowDebugRay: Boolean);
 begin
   inherited Render(ShowDebugAxes, ShowDebugRay);
   DrawTrail;
-  DrawCubeV(Vector3Transform(GetTrailVector3(1 , 93 , 94, 95) ,FModel.transform),Vector3Create(0.01,0.01,0.01),RED);
+  DrawCubeV(Vector3Transform(GetTrailVector3(1 , 66 , 67, 68) ,FModel.transform),Vector3Create(0.01,0.01,0.01),RED);
 end;
 
 procedure TSpaceShipActor.SetTrailLeftPoint(NumberPoint: Integer;

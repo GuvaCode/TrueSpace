@@ -15,6 +15,7 @@ uses
     FLogoTexture: TTexture;
     FLoadingTexture: TTexture;
 
+
 const
 // константы для экранов
 SCREEN_LOADING = $0001;
