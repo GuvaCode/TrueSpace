@@ -34,6 +34,7 @@ type
     WarpOut: TWarpOut;
     Camera: TSpaceCamera;
     procedure ApplyInputToShip({%H-}Actor: TSpaceActor; step: Single);
+    procedure ApplyInputMouseToShip({%H-}Actor: TSpaceActor; MaxStep: Single);
   public
     procedure Init; override; // Init game screen
     procedure Shutdown; override; // Shutdown the game screen
@@ -71,8 +72,6 @@ begin
   if (IsKeyDown(KEY_W)) then ship.InputForward += step;
   if (IsKeyDown(KEY_S)) then ship.InputForward -= step;
 
-
-
   ship.InputForward -= GetGamepadAxisMovement(0, GAMEPAD_AXIS_LEFT_Y);
   ship.InputForward := Clamp(ship.InputForward, -step, step);
 
@@ -86,6 +85,7 @@ begin
   ship.InputUp := 0;
   if (IsKeyDown(KEY_SPACE)) then ship.InputUp += step;
   if (IsKeyDown(KEY_LEFT_CONTROL)) then ship.InputUp -= step;
+
 
   triggerRight := GetGamepadAxisMovement(0, GAMEPAD_AXIS_RIGHT_TRIGGER);
   triggerRight := Remap(triggerRight, -step, step, 0, step);
@@ -114,6 +114,27 @@ begin
   ship.InputRollRight := 0;
   if (IsKeyDown(KEY_Q)) then ship.InputRollRight -= step;
   if (IsKeyDown(KEY_E)) then ship.InputRollRight += step;
+
+
+end;
+
+procedure TScreenSpace.ApplyInputMouseToShip(Actor: TSpaceActor; MaxStep: Single);
+var MouseVector, StepVector: TVector2; Step: Single;
+begin
+  MouseVector := Vector2Subtract(Vector2Create(GetScreenWidth / 2, GetScreenHeight / 2), GetMousePosition);
+  StepVector := Vector2Divide(MouseVector,Vector2Create(GetScreenWidth / 2, GetScreenHeight / 2));
+
+  Step := Vector2Length(StepVector);
+  if Step > MaxStep then Step := MaxStep;
+
+  ship.InputYawLeft := 0;
+  if MouseVector.x < -1 then ship.InputYawLeft -= step;
+  if MouseVector.x > 1 then ship.InputYawLeft += step;
+
+  ship.InputPitchDown := 0;
+  if MouseVector.y < -1 then ship.InputPitchDown += step;
+  if MouseVector.y > 1 then ship.InputPitchDown -= step;
+
 end;
 
 procedure TScreenSpace.Init;
@@ -190,6 +211,8 @@ begin
   WarpOut.Position := Vector3Create(20,0,0);
 
 
+
+  //GetWorldToScreen(
  {
   LazerModel :=  LoadModel(GetAppDir('data' + '/models/ships/laser.glb'));
   Lazer:= TSpaceShipActor.Create(Engine);
@@ -216,7 +239,11 @@ begin
   // update the light shader with the camera view position
  // SetShaderValue(shader, shader.locs[SHADER_LOC_VECTOR_VIEW], @Camera.Camera.position.x, SHADER_UNIFORM_VEC3);
   //UpdateLightValues(shader, ToonLight);
+
+
+
   ApplyInputToShip(Ship, 1);
+  ApplyInputMouseToShip(Ship, 0.5);
 
   Camera.FollowActor(Ship, MoveCount);
   Engine.CrosshairFar.PositionCrosshairOnActor(Ship, 30);
@@ -249,6 +276,8 @@ begin
 end;
 
 procedure TScreenSpace.Render;
+var vX,Vy: Single;
+    VV, V1: TVector2;
 begin
   inherited Render;
   BeginDrawing();
@@ -261,6 +290,12 @@ begin
     Engine.Render(Camera,False,False,Ship.Velocity,False);
     {$ENDIF}
     DrawFPS(10,10);
+    VV := Vector2Subtract(Vector2Create(GetScreenWidth / 2, GetScreenHeight / 2), GetMousePosition);
+
+    VV := Vector2Divide(VV,Vector2Create(GetScreenWidth / 2, GetScreenHeight / 2));
+
+    DrawText(Pchar(FloatToStr(VV.x) + ' ' + FloatToStr(VV.y)), 10,40,10,RED);
+    DrawText(Pchar(FloatToStr(Vector2Length(VV)   ))  , 10,60,10,RED);
   EndDrawing();
 end;
 
@@ -268,6 +303,7 @@ procedure TScreenSpace.Show;
 var Ship22: array [0..1] of TSpaceShip;
 begin
   inherited Show;
+  HideCursor;
   Randomize;
   Ship.SetShipTexture(1, MATERIAL_MAP_DIFFUSE, FModelAtlas[GetRandomValue(0,23)]);
 

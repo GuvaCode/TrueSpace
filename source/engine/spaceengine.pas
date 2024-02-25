@@ -617,6 +617,9 @@ begin
     TSpaceActor(FActorList.Items[i]).FProject := Projection(TSpaceActor(FActorList.Items[i]).FPosition, view, perps);
   end;
 
+  CrosshairNear.DrawCrosshair();
+  CrosshairFar.DrawCrosshair();
+
   DrawGrid(10, 1.0);        // Draw a grid
 
   FSpaceDust.Draw(Camera.GetPosition(), DustVelocity, DustDrawDots);
