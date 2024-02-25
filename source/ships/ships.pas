@@ -49,7 +49,7 @@ procedure TSpaceShip.SetShipType(AValue: TSpaceShipType);
 begin
   if FShipType=AValue then Exit;
   FShipType:=AValue;
-  case AValue of
+  case AValue of   /// todo load
     stChallenger:
     begin
       SetTrailPointVector3(0,1,Vector3Create(3,4,5), Vector3Create(21,22,23));
@@ -103,6 +103,10 @@ end;
 procedure TSpaceShip.Update(const DeltaTime: Single);
 begin
   inherited Update(DeltaTime);
+  case FShipType of
+    stChallenger, stForwarder, stStriker:
+    ActorModel.materials[2].maps[MATERIAL_MAP_ALBEDO].color := BrightTrailColor;
+  end;
 end;
 
 procedure TSpaceShip.Render(ShowDebugAxes: Boolean; ShowDebugRay: Boolean);

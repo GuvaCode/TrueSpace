@@ -209,7 +209,6 @@ begin
 end;
 
 procedure TScreenSpace.Update(MoveCount: Single);
-var Shot: TShot; vec: TVector3; tr: TMatrix;
 begin
   Engine.Update(MoveCount, Ship.Position);
   Engine.ClearDeadActor;
@@ -243,17 +242,8 @@ begin
   if  IsKeyPressed(KEY_K) then Engine.DrawRadar := not Engine.DrawRadar;
   if (IsKeyDown(KEY_F)) then
   begin
-  Shot := TShot.Create(Engine);
-//  Shot.ActorModel := Ship.ShotModel;
+//  Shot := TShot.Create(Engine);
 
- {
-  Shot.Lifetime := 1000;
-  Shot.MaxSpeed:=10.1;
-  Shot.Scale := 1.5;
-  tr := MatrixMultiply(QuaternionToMatrix(Ship.Rotation), Shot.MatixTransform);
-  Shot.Rotation := QuaternionFromMatrix(Ship.MatixTransform);
-  Shot.Position := vec;
-      }
   end;
 
 end;

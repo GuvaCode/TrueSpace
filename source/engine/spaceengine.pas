@@ -217,6 +217,7 @@ type
   { TSpaceShipActor }
   TSpaceShipActor = class(TSpaceActor)
   private
+    FBrightTrailColor: TColorB;
     RungCount: integer;
     RungIndex: integer;
     Rungs: array [0..16] of TrailRung;
@@ -237,6 +238,7 @@ type
     procedure SetTrailPointVector3(PointNumber, MeshNumber: Integer; TrailLeftVector, TrailRightVector: TVector3);
     function GetTrailVector3(MeshIndex: Integer; V1, V2, V3: Integer): TVector3;
     property TrailColor: TColorB read FTrailColor write FTrailColor;
+    property BrightTrailColor: TColorB read FBrightTrailColor;
   end;
 
   procedure StartTimer(timer:PTimer; lifetime: single);
@@ -1203,8 +1205,8 @@ begin
      if FTrailEngineBright > - 0.4 then FTrailEngineBright -= 0.05;
   end;
 
-    color := ColorContrast(fill, FTrailEngineBright);
-
+   color := ColorContrast(fill, FTrailEngineBright);
+   FBrightTrailColor := Color;
   // ActorModel.materials[2].maps[MATERIAL_MAP_ALBEDO].color := color;   // toto ship type fix
 
   rlDrawRenderBatchActive();
