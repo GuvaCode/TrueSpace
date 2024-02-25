@@ -22,7 +22,7 @@ type // Enumerate ship type
     procedure OnCollision(const {%H-}Actor: TSpaceActor); override;
     procedure Update(const DeltaTime: Single); override;
     procedure Render(ShowDebugAxes: Boolean; ShowDebugRay: Boolean); override;
-    procedure SetShipTexture(AMaterialNumber: Integer; ATexture: TTexture);
+    procedure SetShipTexture(AMaterialNumber:Integer; AmaterialMapType: TMaterialMapIndex; ATexture: TTexture);
     property ShipType: TSpaceShipType read FShipType write SetShipType;
     property Energy: Integer read FEnergy write SetEnergy;
   end;
@@ -31,10 +31,11 @@ type // Enumerate ship type
 implementation
 
 { TSpaceShip }
-procedure TSpaceShip.SetShipTexture(AMaterialNumber: Integer; ATexture: TTexture);
+procedure TSpaceShip.SetShipTexture(AMaterialNumber: Integer;
+  AmaterialMapType: TMaterialMapIndex; ATexture: TTexture);
 begin
   if AMaterialNumber <= ActorModel.materialCount - 1 then
-  ActorModel.materials[1].maps[MATERIAL_MAP_DIFFUSE].texture := ATexture else
+  ActorModel.materials[AMaterialNumber].maps[AmaterialMapType].texture := ATexture else
   TraceLog(LOG_ERROR,'SetShipTexture: materials value not exits');
 end;
 

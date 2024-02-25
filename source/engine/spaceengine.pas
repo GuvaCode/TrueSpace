@@ -263,7 +263,7 @@ end;
 
 function TimerDone(timer: PTimer): boolean;
 begin
-  if timer <> nil then result:= timer^.Lifetime <= 0 else
+  if timer <> nil then result:= timer^.Lifetime  <= 0 else
   result:= false;
 end;
 
@@ -1205,7 +1205,7 @@ begin
 
     color := ColorContrast(fill, FTrailEngineBright);
 
-    ActorModel.materials[2].maps[MATERIAL_MAP_ALBEDO].color := color;   // toto ship type fix
+  // ActorModel.materials[2].maps[MATERIAL_MAP_ALBEDO].color := color;   // toto ship type fix
 
   rlDrawRenderBatchActive();
   rlEnableDepthMask();

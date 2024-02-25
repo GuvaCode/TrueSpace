@@ -12,6 +12,7 @@ uses
 
   var
     FModelAtlas: array [0..23] of TTexture; // текстуры
+    FModelEmission: array [0..4] of TTexture;
     FLogoTexture: TTexture;
     FLoadingTexture: TTexture;
 

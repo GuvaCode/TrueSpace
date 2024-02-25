@@ -25,7 +25,10 @@ end;
 
  var
      DataProgress: Integer = 0;
-     loadCounter: Integer = 0;
+
+     AtlasCounter: Integer = 0;
+     EmissionCounter: Integer = 0;
+
      Position: TVector2;
      FrameRec: TRectangle;
      currentFrame, framesCounter, framesSpeed: Integer;
@@ -52,25 +55,35 @@ end;
 procedure TScreenLoading.Update(MoveCount: Single);
 begin
   Inc(framesCounter);
-  if (framesCounter >= (60/framesSpeed)) then
+  if (framesCounter >= ( GetFps / framesSpeed)) then
   begin
     framesCounter := 0;
     Inc(currentFrame);
+
     if (currentFrame > 2) then currentFrame := 0;
     frameRec.x := currentFrame*FLoadingTexture.width/3;
-     Randomize;
-    if loadCounter <= 23 then
+  end;
+
+    if AtlasCounter <= 23 then // loading atlas texture
     begin
-      DataProgress := loadCounter;
-      FModelAtlas[loadCounter] := LoadTexture(GetAppDir('data/textures/atlas/'+IntTostr(loadCounter)+'.png'));
-      if IsTextureReady(FModelAtlas[loadCounter]) then Inc(loadCounter);
+      DataProgress := AtlasCounter + EmissionCounter;
+      FModelAtlas[AtlasCounter] := LoadTexture(GetAppDir('data/textures/atlas/'+IntTostr(AtlasCounter)+'.png'));
+      if IsTextureReady(FModelAtlas[AtlasCounter]) then Inc(AtlasCounter);
     end;
 
-    if loadCounter >23 then
+    if EmissionCounter <= 4 then // loading emmision texture
+    begin
+      DataProgress := AtlasCounter + EmissionCounter;
+      FModelEmission[EmissionCounter] := LoadTexture(GetAppDir('data/textures/atlas/emmision/'+IntTostr(EmissionCounter)+'.png'));
+      if IsTextureReady(FModelAtlas[EmissionCounter]) then Inc(EmissionCounter);
+    end;
+
+    if (AtlasCounter > 23) and (EmissionCounter > 4) then
     begin
       self.Hide;
     end;
-  end;
+
+
 end;
 
 
@@ -84,7 +97,7 @@ begin
 
     ProgressRec := RectangleCreate(Position.x, Position.y + 125, 176 ,6);
     Progress := DataProgress;
-    GuiProgressBar(ProgressRec,nil,nil, @Progress, 0, 23);
+    GuiProgressBar(ProgressRec,nil,nil, @Progress, 0, 23+6);
     ProgressRec := RectangleCreate(Position.x, Position.y + 125 + 20 , 176 ,6);
 
     GuiSetStyle(LABELS, TEXT_ALIGNMENT, TEXT_ALIGN_CENTER);

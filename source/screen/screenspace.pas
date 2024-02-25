@@ -30,6 +30,8 @@ type
     Ship: TSpaceShip;
     Ship2, Ship3: TSpaceShipActor;
     WarpGlow: TWarpGlow;
+    WarpIn: TWarpIn;
+    WarpOut: TWarpOut;
     Camera: TSpaceCamera;
     procedure ApplyInputToShip({%H-}Actor: TSpaceActor; step: Single);
   public
@@ -120,7 +122,7 @@ begin
   Engine := TSpaceEngine.Create;
   Engine.CrosshairFar.Create(GetAppDir('data' + '/models/hud/crosshair2.gltf'));
 
- // Engine.SkyBoxQuality:=SBQOriginal;
+  Engine.SkyBoxQuality:=SBQOriginal;
   Engine.SetSkyBoxFileName('data/textures/skybox/cubemap.png');
 
 
@@ -128,6 +130,8 @@ begin
   Engine.UsesSkyBox := True;
 
   Engine.DrawRadar := True;
+  Engine.OutlineShader:= False;
+
   Camera := TSpaceCamera.Create(True, 50);
 
   Ship := TSpaceShip.Create(Engine);
@@ -174,9 +178,17 @@ begin
 
 
   WarpGlow := TWarpGlow.Create(Engine);
-  WarpGlow.Position := Vector3Create(10,0,0);
+  WarpGlow.Position := Vector3Create(20,0,0);
   WarpGlow.RadarColor := ORANGE;
   WarpGlow.RadarStrinig:='WARP';
+
+
+  WarpIn := TWarpIn.Create(Engine);
+  WarpIn.Position := Vector3Create(20,0,0);
+
+  WarpOut := TWarpOut.Create(Engine);
+  WarpOut.Position := Vector3Create(20,0,0);
+
 
  {
   LazerModel :=  LoadModel(GetAppDir('data' + '/models/ships/laser.glb'));
@@ -227,7 +239,8 @@ begin
 
  // vec := Vector3Transform( Ship.VectorFromMesh(1,0),Ship.ActorModel.transform);
   //vec := Vector3Add(Ship.Position, Ship.GetForward);
-
+  if  IsKeyPressed(KEY_L) then Engine.OutlineShader := not Engine.OutlineShader;
+  if  IsKeyPressed(KEY_K) then Engine.DrawRadar := not Engine.DrawRadar;
   if (IsKeyDown(KEY_F)) then
   begin
   Shot := TShot.Create(Engine);
@@ -265,7 +278,9 @@ procedure TScreenSpace.Show;
 var Ship22: array [0..1] of TSpaceShip;
 begin
   inherited Show;
-  Ship.SetShipTexture(1, FModelAtlas[GetRandomValue(0,23)]);
+  Randomize;
+  Ship.SetShipTexture(1, MATERIAL_MAP_DIFFUSE, FModelAtlas[GetRandomValue(0,23)]);
+
 
   Ship22[0] := TSpaceShip.Create(Engine);
   Ship22[0].ActorModel := LoadModel(GetAppDir('data' + '/models/ships/Striker.glb'));
@@ -275,7 +290,7 @@ begin
   Ship22[0].RadarStrinig:='Neutral22';
   Ship22[0].Scale:=5.1;
   Ship22[0].Tag:=12;
-  Ship22[0].SetShipTexture(1, FModelAtlas[GetRandomValue(0,23)]);
+  Ship22[0].SetShipTexture(1,MATERIAL_MAP_DIFFUSE, FModelAtlas[GetRandomValue(0,23)]);
 
 
   Ship22[1] := TSpaceShip.Create(Engine);
@@ -286,8 +301,8 @@ begin
   Ship22[1].RadarStrinig:='Neutral222';
   Ship22[1].Scale:=5.1;
   Ship22[1].Tag:=12;
-  Ship22[1].SetShipTexture(1, FModelAtlas[GetRandomValue(0,23)]);
-  Ship22[0].SetShipTexture(1, FModelAtlas[GetRandomValue(0,23)]);
+  Ship22[1].SetShipTexture(1,MATERIAL_MAP_DIFFUSE, FModelAtlas[GetRandomValue(0,23)]);
+  Ship22[0].SetShipTexture(1,MATERIAL_MAP_DIFFUSE, FModelAtlas[GetRandomValue(0,23)]);
 end;
 
 procedure TScreenSpace.Hide;
