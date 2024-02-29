@@ -5,7 +5,7 @@ unit SpaceEngine;
 interface
 
 uses
-  RayLib, RayMath, RlGl, RLights, Math, DigestMath, Collider, Global, Classes, SysUtils;
+  RayLib, RayMath, RlGl, Math, DigestMath, Collider, Global, Classes, SysUtils;
 
 type
   TSkyBoxQuality = (SBQOriginal, SBQLow, SBQVeryLow);
@@ -82,10 +82,18 @@ type
     FSpaceDust: TSpaceDust;
     FSkyBox: TModel;
     FUsesSkyBox: Boolean;
-    FNormShader, FOutline, FLightShader: TShader;
-    FLight: TLight;
+    FNormShader, FOutline: TShader;
     FTarget: TRenderTexture2D;
+    LightCam: TCamera3D; // Lighting camera;
+    ShadowShader: TShader; // Light and shadow shader
+    FLightDir: TVector3;
+    lightColor: TColorB;
+    lightColorNormalized: TVector4;
+    lightDirLoc, lightColLoc, lightVPLoc, shadowMapLoc: Integer;
+    ShadowMap: TRenderTexture2D;
+    function LoadShadowmapRenderTexture(width, height: Integer): TRenderTexture2D;
 
+    procedure UnloadShadowmapRenderTexture(target: TRenderTexture2D);
     function GetCount: Integer;
     function GetModelActor(const Index: Integer): TSpaceActor;
   public
@@ -110,6 +118,7 @@ type
     property DrawRadar: Boolean read FDrawRadar write FDrawRadar;
     property SkyBoxQuality: TSkyBoxQuality read FSkyBoxQuality write FSkyBoxQuality;
     property OutlineShader: Boolean read FOutlineShader write FOutlineShader;
+    property LightDir: TVector3 read FLightDir write FLightDir;
 
   end;
 
@@ -434,6 +443,42 @@ begin
   result:=Camera.fovy;
 end;
 
+function TSpaceEngine.LoadShadowmapRenderTexture(width, height: Integer): TRenderTexture2D;
+var target: TRenderTexture2D;
+begin
+  target.id := rlLoadFramebuffer();   // Load an empty framebuffer
+  target.texture.width := width;
+  target.texture.height := height;
+  if (target.id > 0) then
+  begin
+    rlEnableFramebuffer(target.id);
+    // Create depth texture
+    // We don't need a color texture for the shadowmap
+    target.depth.id := rlLoadTextureDepth(width, height, false);
+    target.depth.width := width;
+    target.depth.height := height;
+    target.depth.format := 19;       //DEPTH_COMPONENT_24BIT?
+    target.depth.mipmaps := 1;
+    // Attach depth texture to FBO
+    rlFramebufferAttach(target.id, target.depth.id, RL_ATTACHMENT_DEPTH, RL_ATTACHMENT_TEXTURE2D, 0);
+    // Check if fbo is complete with attachments (valid)
+    if rlFramebufferComplete(target.id) then TRACELOG(LOG_INFO, 'FBO: [ID %i] Framebuffer object created successfully', target.id);
+    rlDisableFramebuffer();
+  end
+  else TRACELOG(LOG_WARNING, 'FBO: Framebuffer object can not be created');
+  result := target;
+end;
+
+
+
+procedure TSpaceEngine.UnloadShadowmapRenderTexture(target: TRenderTexture2D);
+begin
+  if (target.id > 0) then
+  // NOTE: Depth texture/renderbuffer is automatically
+  // queried and deleted before deleting framebuffer
+  rlUnloadFramebuffer(target.id);
+end;
+
 { TSpaceEngine }
 function TSpaceEngine.GetCount: Integer;
 begin
@@ -451,11 +496,12 @@ end;
 
 constructor TSpaceEngine.Create;
 var CubeMesh: TMesh;
-    skyboxVs, skyboxFs: PChar;
-    toonFs, toonVs, normFs, normVs, outlineFs: PChar;
+    skyboxVs, skyboxFs, shadowMapVs, shadowMapFs: PChar;
+    normFs, normVs, outlineFs: PChar;
     SkyBoxMap: Integer = MATERIAL_MAP_CUBEMAP;
     UsesHDR: Boolean = False;
-    atlasNumber: integer;
+    ambientLoc, shadowMapResolution: Integer;
+    ambient: array[0..3] of Single;
 begin
   FActorList := TList.Create;
   FDeadActorList := TList.Create;
@@ -488,17 +534,51 @@ begin
   FNormShader := LoadShaderFromMemory(normVs, normFs);
   FNormShader.locs[SHADER_LOC_MATRIX_MODEL] := GetShaderLocation(FNormShader, 'matModel');
 
-  // outline shader
+  //outline shader
   FOutline := LoadShaderFromMemory(nil, outlineFs);
 
   // lighting shader
-  FLightShader := LoadShaderFromMemory(toonVs, toonFs);
-  FLightShader.locs[SHADER_LOC_MATRIX_MODEL] := GetShaderLocation(FLightShader, 'matModel');
+  //FLightShader := LoadShaderFromMemory(toonVs, toonFs);
+  //FLightShader.locs[SHADER_LOC_MATRIX_MODEL] := GetShaderLocation(FLightShader, 'matModel');
 
 
   // make a light (max 4 but we're only using 1)   // todo set light position
-  FLight := CreateLight(LIGHT_POINT, Vector3Create( 2,4,4 ), Vector3Zero(), WHITE, FLightShader);
+  //FLight := CreateLight(LIGHT_POINT, Vector3Create( 2,4,4 ), Vector3Zero(), WHITE, FLightShader);
   FTarget := LoadRenderTexture(GetScreenWidth, GetScreenHeight);
+
+  {$I ../shaders/shadowmap.inc}
+  shadowShader := LoadShaderFromMemory(shadowMapVs, shadowMapFs);
+  shadowShader.locs[SHADER_LOC_VECTOR_VIEW] := GetShaderLocation(shadowShader, 'viewPos');
+
+  FlightDir := Vector3Normalize(Vector3Create( 0.35, -1.0, -0.35 ));
+  lightColor := WHITE;
+  lightColorNormalized := ColorNormalize(lightColor);
+  lightDirLoc := GetShaderLocation(shadowShader, 'lightDir');
+  lightColLoc := GetShaderLocation(shadowShader, 'lightColor');
+  SetShaderValue(shadowShader, lightDirLoc, @FlightDir, SHADER_UNIFORM_VEC3);
+  SetShaderValue(shadowShader, lightColLoc, @lightColorNormalized, SHADER_UNIFORM_VEC4);
+
+  ambientLoc := GetShaderLocation(shadowShader, 'ambient');
+  ambient[0] := 0.1;
+  ambient[1] := 0.1;
+  ambient[2] := 0.1;
+  ambient[3] := 0.1;
+  SetShaderValue(shadowShader, ambientLoc, @ambient, SHADER_UNIFORM_VEC4);
+
+  lightVPLoc := GetShaderLocation(shadowShader, 'lightVP');
+  shadowMapLoc := GetShaderLocation(shadowShader, 'shadowMap');
+  shadowMapResolution := SHADOWMAP_RESOLUTION;
+  SetShaderValue(shadowShader, GetShaderLocation(shadowShader, 'shadowMapResolution'), @shadowMapResolution, SHADER_UNIFORM_INT);
+
+  shadowMap := LoadShadowmapRenderTexture(SHADOWMAP_RESOLUTION, SHADOWMAP_RESOLUTION);
+  // For the shadowmapping algorithm, we will be rendering everything from the light's point of view
+
+  lightCam.position := Vector3Scale(FlightDir, -15.0);
+  lightCam.target := Vector3Zero();
+  // Use an orthographic projection for directional lights
+  lightCam.projection := CAMERA_ORTHOGRAPHIC;
+  lightCam.up := Vector3Create( 0.0, 1.0, 0.0 );
+  lightCam.fovy := 20.0;
 
 
 end;
@@ -557,21 +637,17 @@ end;
 
 procedure TSpaceEngine.Render(Camera: TSpaceCamera; ShowDebugAxes,
   ShowDebugRay: Boolean; DustVelocity: TVector3; DustDrawDots: boolean);
-var i ,px, py, playerX, playerY: Integer;  view, perps: TMatrix; p: TVector4;
-    hsw, hsh: single; TestPos: TVector2;
+var i ,px, py, playerX, playerY, slot: Integer;
+    view, perps, lightView, lightProj, lightViewProj: TMatrix;
+    p: TVector4;
+    hsw, hsh: single;
+    cameraPos: TVector3;
 begin
   hsw := GetScreenWidth / 2.0;
   hsh := GetScreenHeight / 2.0;
 
   view := MatrixLookAt(camera.Camera.position, camera.Camera.target, camera.Camera.up);
   perps := MatrixPerspective(camera.Camera.fovy, GetScreenWidth / GetScreenHeight, 0.01, 1000.0);
-
-  // update the light shader with the camera view position
-
-  SetShaderValue(FLightShader, FLightShader.locs[SHADER_LOC_VECTOR_VIEW], @camera.Camera.position.x, SHADER_UNIFORM_VEC3);
-  SetShaderValue(FNormShader, FLightShader.locs[SHADER_LOC_VECTOR_VIEW], @camera.Camera.position.x, SHADER_UNIFORM_VEC3);
-  UpdateLightValues(FLightShader, Flight);
-  UpdateLightValues(FNormShader, Flight);
 
   if FUsesSkyBox then
   begin
@@ -585,25 +661,54 @@ begin
     Camera.EndDrawing;
   end;
 
-
  // render first to the normals texture for outlining
  // to a texture
+  BeginTextureMode(FTarget);
+    ClearBackground(ColorCreate(255,255,255,255));
+    Camera.BeginDrawing;
+    for i := 0 to FActorList.Count - 1 do
+    begin
+      if not TSpaceActor(FActorList.Items[i]).ClassNameIs('TWarpGlow') then
+      TSpaceActor(FActorList.Items[i]).SetShader(FNormShader);
+      TSpaceActor(FActorList.Items[i]).Render(ShowDebugAxes,ShowDebugRay);
+      TSpaceActor(FActorList.Items[i]).FProject := Projection(TSpaceActor(FActorList.Items[i]).FPosition, view, perps);
+    end;
+    Camera.EndDrawing;
+  EndTextureMode();
 
- BeginTextureMode(FTarget);
-     ClearBackground(ColorCreate(255,255,255,255));
-     Camera.BeginDrawing;
-     for i := 0 to FActorList.Count - 1 do
-     begin
-       if not TSpaceActor(FActorList.Items[i]).ClassNameIs('TWarpGlow') then
-       TSpaceActor(FActorList.Items[i]).SetShader(FNormShader);
-       TSpaceActor(FActorList.Items[i]).Render(ShowDebugAxes,ShowDebugRay);
-       TSpaceActor(FActorList.Items[i]).FProject := Projection(TSpaceActor(FActorList.Items[i]).FPosition, view, perps);
-     end;
-     Camera.EndDrawing;
- EndTextureMode();
+  CameraPos := Camera.Camera.position;
+  SetShaderValue(shadowShader, shadowShader.locs[SHADER_LOC_VECTOR_VIEW], @cameraPos, SHADER_UNIFORM_VEC3);
 
+  lightDir := Vector3Normalize(lightDir);
+  lightCam.position := Vector3Scale(lightDir, -15.0);
+  SetShaderValue(shadowShader, lightDirLoc, @lightDir, SHADER_UNIFORM_VEC3);
+
+  BeginTextureMode(shadowMap);
+    ClearBackground(WHITE);
+    BeginMode3D(lightCam);
+      lightView := rlGetMatrixModelview();
+      lightProj := rlGetMatrixProjection();
+      for i := 0 to FActorList.Count - 1 do
+      begin
+        if not TSpaceActor(FActorList.Items[i]).ClassNameIs('TWarpGlow') then
+        TSpaceActor(FActorList.Items[i]).SetShader(shadowShader);
+        TSpaceActor(FActorList.Items[i]).Render(ShowDebugAxes,ShowDebugRay);
+        TSpaceActor(FActorList.Items[i]).FProject := Projection(TSpaceActor(FActorList.Items[i]).FPosition, view, perps);
+      end;
+    EndMode3D();
+  EndTextureMode();
 
   Camera.BeginDrawing;
+////
+  lightViewProj := MatrixMultiply(lightView, lightProj);
+  SetShaderValueMatrix(shadowShader, lightVPLoc, lightViewProj);
+
+  rlEnableShader(shadowShader.id);
+  slot := 10; // Can be anything 0 to 15, but 0 will probably be taken up
+  rlActiveTextureSlot(10);
+  rlEnableTexture(shadowMap.depth.id);
+  rlSetUniform(shadowMapLoc, @slot, SHADER_UNIFORM_INT, 1);
+////
 
   CrosshairNear.DrawCrosshair();
   CrosshairFar.DrawCrosshair();
@@ -612,7 +717,7 @@ begin
   for i := 0 to FActorList.Count - 1 do
   begin
     if not TSpaceActor(FActorList.Items[i]).ClassNameIs('TWarpGlow') then
-    TSpaceActor(FActorList.Items[i]).SetShader(FLightShader);
+    TSpaceActor(FActorList.Items[i]).SetShader(shadowShader);
     TSpaceActor(FActorList.Items[i]).Render(ShowDebugAxes,ShowDebugRay);
     TSpaceActor(FActorList.Items[i]).FProject := Projection(TSpaceActor(FActorList.Items[i]).FPosition, view, perps);
   end;
@@ -623,8 +728,6 @@ begin
   DrawGrid(10, 1.0);        // Draw a grid
 
   FSpaceDust.Draw(Camera.GetPosition(), DustVelocity, DustDrawDots);
-
-
   Camera.EndDrawing;
 
   // show the modified normals texture
@@ -633,16 +736,15 @@ begin
   //RectangleCreate( 0, 0, Ftarget.texture.width/8.0, Ftarget.texture.height/8.0 ),
   //Vector2Create(0,0), 0, WHITE);
 
-
   // outline shader uses the normal texture to overlay outlines
  if FOutlineShader then
  begin
- BeginShaderMode(Foutline);
+   BeginShaderMode(Foutline);
      DrawTexturePro(Ftarget.texture,
      RectangleCreate( 0, 0, Ftarget.texture.width, -Ftarget.texture.height ),
      RectangleCreate( 0, 0, Ftarget.texture.width, Ftarget.texture.height ),
      Vector2Create(0,0), 0, WHITE);
- EndShaderMode();
+   EndShaderMode();
  end;
 
   if FDrawRadar then

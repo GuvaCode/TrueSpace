@@ -18,10 +18,12 @@ uses
 
 
 const
-// константы для экранов
-SCREEN_LOADING = $0001;
-SCREEN_SPACE = $0002;
-
+  // константы для экранов
+  SCREEN_LOADING = $0001;
+  SCREEN_SPACE = $0002;
+  // for shadow map shader
+  SHADOWMAP_RESOLUTION = 1024 * 4;
+  CameraSpeed = 0.05;
 
 implementation
 

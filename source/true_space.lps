@@ -7,8 +7,8 @@
       <Unit>
         <Filename Value="true_space.lpr"/>
         <IsPartOfProject Value="True"/>
-        <TopLine Value="24"/>
-        <CursorPos X="58" Y="36"/>
+        <TopLine Value="44"/>
+        <CursorPos X="3" Y="37"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
       </Unit>
@@ -17,9 +17,9 @@
         <IsPartOfProject Value="True"/>
         <UnitName Value="ScreenSpace"/>
         <IsVisibleTab Value="True"/>
-        <EditorIndex Value="7"/>
-        <TopLine Value="291"/>
-        <CursorPos X="49" Y="301"/>
+        <EditorIndex Value="4"/>
+        <TopLine Value="273"/>
+        <CursorPos X="43" Y="282"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
       </Unit>
@@ -27,9 +27,9 @@
         <Filename Value="engine/spaceengine.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="SpaceEngine"/>
-        <EditorIndex Value="8"/>
-        <TopLine Value="645"/>
-        <CursorPos X="53" Y="673"/>
+        <EditorIndex Value="6"/>
+        <TopLine Value="233"/>
+        <CursorPos Y="121"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
       </Unit>
@@ -39,23 +39,21 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="37"/>
         <CursorPos X="23" Y="46"/>
-        <UsageCount Value="198"/>
+        <UsageCount Value="200"/>
       </Unit>
       <Unit>
         <Filename Value="shaders/toon_light.inc"/>
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="-1"/>
-        <TopLine Value="179"/>
-        <CursorPos Y="194"/>
-        <UsageCount Value="139"/>
+        <UsageCount Value="145"/>
       </Unit>
       <Unit>
         <Filename Value="engine/global.pas"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="9"/>
-        <TopLine Value="2"/>
-        <CursorPos X="19" Y="15"/>
-        <UsageCount Value="96"/>
+        <EditorIndex Value="7"/>
+        <TopLine Value="14"/>
+        <CursorPos X="18" Y="26"/>
+        <UsageCount Value="102"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
@@ -65,7 +63,7 @@
         <EditorIndex Value="1"/>
         <TopLine Value="58"/>
         <CursorPos X="52" Y="81"/>
-        <UsageCount Value="96"/>
+        <UsageCount Value="102"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
@@ -73,19 +71,19 @@
         <IsPartOfProject Value="True"/>
         <UnitName Value="Ships"/>
         <EditorIndex Value="2"/>
-        <TopLine Value="25"/>
+        <TopLine Value="27"/>
         <CursorPos X="33" Y="52"/>
-        <UsageCount Value="90"/>
+        <UsageCount Value="96"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="objects/warpgate.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="WarpGate"/>
-        <EditorIndex Value="4"/>
-        <TopLine Value="80"/>
-        <CursorPos X="67" Y="80"/>
-        <UsageCount Value="58"/>
+        <EditorIndex Value="3"/>
+        <TopLine Value="62"/>
+        <CursorPos X="5" Y="82"/>
+        <UsageCount Value="64"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
@@ -106,19 +104,18 @@
       </Unit>
       <Unit>
         <Filename Value="../../Ray4Laz/source/raylib.pas"/>
-        <EditorIndex Value="6"/>
-        <TopLine Value="991"/>
-        <CursorPos X="21" Y="997"/>
+        <EditorIndex Value="5"/>
+        <TopLine Value="482"/>
+        <CursorPos X="18" Y="497"/>
         <UsageCount Value="100"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="../../Ray4Laz/source/raymath.pas"/>
-        <EditorIndex Value="3"/>
-        <TopLine Value="108"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="6"/>
         <CursorPos X="23" Y="114"/>
-        <UsageCount Value="41"/>
-        <Loaded Value="True"/>
+        <UsageCount Value="42"/>
       </Unit>
       <Unit>
         <Filename Value="extra/digestmath.pas"/>
@@ -203,10 +200,9 @@
       </Unit>
       <Unit>
         <Filename Value="shaders/mask.inc"/>
-        <EditorIndex Value="5"/>
+        <EditorIndex Value="-1"/>
         <CursorPos Y="17"/>
-        <UsageCount Value="68"/>
-        <Loaded Value="True"/>
+        <UsageCount Value="70"/>
       </Unit>
       <Unit>
         <Filename Value="shaders/star.inc"/>
@@ -279,10 +275,11 @@
       </Unit>
       <Unit>
         <Filename Value="../../Ray4Laz/examples/shaders/shaders_shadowmap/shaders_shadowmap.lpr"/>
-        <EditorIndex Value="-1"/>
-        <TopLine Value="130"/>
-        <CursorPos X="12" Y="142"/>
-        <UsageCount Value="6"/>
+        <EditorIndex Value="9"/>
+        <TopLine Value="155"/>
+        <CursorPos X="17" Y="183"/>
+        <UsageCount Value="11"/>
+        <Loaded Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="../../Ray4Laz/examples/shaders/shaders_fog/rlights.pas"/>
@@ -342,10 +339,10 @@
       </Unit>
       <Unit>
         <Filename Value="../../../Загрузки/ellite/project1.lpr"/>
-        <EditorIndex Value="10"/>
-        <TopLine Value="70"/>
+        <EditorIndex Value="8"/>
+        <TopLine Value="85"/>
         <CursorPos X="55" Y="94"/>
-        <UsageCount Value="53"/>
+        <UsageCount Value="56"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
@@ -418,127 +415,146 @@
         <CursorPos X="10" Y="129"/>
         <UsageCount Value="10"/>
       </Unit>
+      <Unit>
+        <Filename Value="shaders/shadowmap.inc"/>
+        <EditorIndex Value="-1"/>
+        <UsageCount Value="10"/>
+      </Unit>
+      <Unit>
+        <Filename Value="../../../Загрузки/Mplayer_ohne_GTK2/mplayercontrollaz.pas"/>
+        <UnitName Value="MPlayerControlLaz"/>
+        <EditorIndex Value="-1"/>
+        <UsageCount Value="11"/>
+      </Unit>
+      <Unit>
+        <Filename Value="../../../Загрузки/Mplayer_ohne_GTK2/mplayerctrl.pas"/>
+        <UnitName Value="MPlayerCtrl"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="704"/>
+        <CursorPos Y="768"/>
+        <UsageCount Value="10"/>
+      </Unit>
     </Units>
     <JumpHistory HistoryIndex="29">
       <Position>
+        <Filename Value="engine/spaceengine.pas"/>
+        <Caret Line="574" Column="74" TopLine="556"/>
+      </Position>
+      <Position>
+        <Filename Value="engine/spaceengine.pas"/>
+        <Caret Line="575" Column="23" TopLine="556"/>
+      </Position>
+      <Position>
+        <Filename Value="engine/spaceengine.pas"/>
+        <Caret Line="687" Column="29" TopLine="679"/>
+      </Position>
+      <Position>
+        <Filename Value="engine/spaceengine.pas"/>
+        <Caret Line="710" Column="28" TopLine="690"/>
+      </Position>
+      <Position>
+        <Filename Value="engine/spaceengine.pas"/>
+        <Caret Line="711" Column="25" TopLine="691"/>
+      </Position>
+      <Position>
+        <Filename Value="engine/spaceengine.pas"/>
+        <Caret Line="94" Column="52" TopLine="83"/>
+      </Position>
+      <Position>
+        <Filename Value="engine/spaceengine.pas"/>
+        <Caret Line="95" Column="5" TopLine="80"/>
+      </Position>
+      <Position>
+        <Filename Value="engine/spaceengine.pas"/>
+        <Caret Line="543" Column="58" TopLine="542"/>
+      </Position>
+      <Position>
+        <Filename Value="engine/spaceengine.pas"/>
+        <Caret Line="501" Column="49" TopLine="545"/>
+      </Position>
+      <Position>
+        <Filename Value="engine/spaceengine.pas"/>
+        <Caret Line="502" Column="5" TopLine="470"/>
+      </Position>
+      <Position>
+        <Filename Value="../../Ray4Laz/examples/shaders/shaders_shadowmap/shaders_shadowmap.lpr"/>
+        <Caret Line="164" Column="38" TopLine="148"/>
+      </Position>
+      <Position>
+        <Filename Value="engine/spaceengine.pas"/>
+        <Caret Line="120" Column="22" TopLine="110"/>
+      </Position>
+      <Position>
+        <Filename Value="engine/spaceengine.pas"/>
+        <Caret Line="444" Column="36" TopLine="456"/>
+      </Position>
+      <Position>
+        <Filename Value="engine/spaceengine.pas"/>
+        <Caret Line="120" Column="63" TopLine="108"/>
+      </Position>
+      <Position>
         <Filename Value="screen/screenspace.pas"/>
-        <Caret Line="291" Column="47" TopLine="280"/>
+        <Caret Line="297" Column="17" TopLine="270"/>
       </Position>
       <Position>
         <Filename Value="screen/screenspace.pas"/>
-        <Caret Line="289" Column="29" TopLine="277"/>
+        <Caret Line="275" Column="24" TopLine="270"/>
       </Position>
       <Position>
         <Filename Value="screen/screenspace.pas"/>
-        <Caret Line="125" Column="3" TopLine="112"/>
+        <Caret Line="293" Column="29" TopLine="276"/>
       </Position>
       <Position>
         <Filename Value="screen/screenspace.pas"/>
-        <Caret Line="37" Column="36" TopLine="25"/>
+        <Caret Line="278" Column="28" TopLine="266"/>
+      </Position>
+      <Position>
+        <Filename Value="engine/spaceengine.pas"/>
+        <Caret Line="120" Column="55" TopLine="108"/>
       </Position>
       <Position>
         <Filename Value="screen/screenspace.pas"/>
-        <Caret Line="127" Column="42" TopLine="117"/>
+        <Caret Line="278" Column="28" TopLine="266"/>
       </Position>
       <Position>
         <Filename Value="engine/spaceengine.pas"/>
-        <Caret Line="662" Column="28" TopLine="657"/>
+        <Caret Line="121" Column="66" TopLine="109"/>
       </Position>
       <Position>
         <Filename Value="engine/spaceengine.pas"/>
-        <Caret Line="1188" Column="71" TopLine="1178"/>
+        <Caret Line="474" Column="59" TopLine="469"/>
+      </Position>
+      <Position>
+        <Filename Value="screen/screenspace.pas"/>
+        <Caret Line="278" Column="28" TopLine="266"/>
       </Position>
       <Position>
         <Filename Value="engine/spaceengine.pas"/>
-        <Caret Line="1189" Column="20" TopLine="1178"/>
+        <Caret Line="121" Column="66" TopLine="108"/>
       </Position>
       <Position>
         <Filename Value="engine/spaceengine.pas"/>
-        <Caret Line="41" Column="16" TopLine="35"/>
+        <Caret Line="95" Column="26" TopLine="83"/>
       </Position>
       <Position>
         <Filename Value="engine/spaceengine.pas"/>
-        <Caret Line="42" Column="14" TopLine="35"/>
+        <Caret Line="472" TopLine="470"/>
       </Position>
       <Position>
         <Filename Value="engine/spaceengine.pas"/>
-        <Caret Line="44" Column="11" TopLine="35"/>
+        <Caret Line="95" Column="5" TopLine="84"/>
       </Position>
       <Position>
         <Filename Value="engine/spaceengine.pas"/>
-        <Caret Line="45" Column="11" TopLine="35"/>
+        <Caret Line="122" Column="12" TopLine="109"/>
       </Position>
       <Position>
         <Filename Value="engine/spaceengine.pas"/>
-        <Caret Line="49" Column="28" TopLine="35"/>
+        <Caret Line="121" TopLine="112"/>
       </Position>
       <Position>
-        <Filename Value="engine/spaceengine.pas"/>
-        <Caret Line="50" Column="28" TopLine="35"/>
-      </Position>
-      <Position>
-        <Filename Value="engine/spaceengine.pas"/>
-        <Caret Line="51" Column="71" TopLine="35"/>
-      </Position>
-      <Position>
-        <Filename Value="engine/spaceengine.pas"/>
-        <Caret Line="92" Column="45" TopLine="85"/>
-      </Position>
-      <Position>
-        <Filename Value="engine/spaceengine.pas"/>
-        <Caret Line="324" Column="14" TopLine="316"/>
-      </Position>
-      <Position>
-        <Filename Value="engine/spaceengine.pas"/>
-        <Caret Line="325" Column="24" TopLine="316"/>
-      </Position>
-      <Position>
-        <Filename Value="engine/spaceengine.pas"/>
-        <Caret Line="327" Column="9" TopLine="316"/>
-      </Position>
-      <Position>
-        <Filename Value="engine/spaceengine.pas"/>
-        <Caret Line="329" Column="9" TopLine="316"/>
-      </Position>
-      <Position>
-        <Filename Value="engine/spaceengine.pas"/>
-        <Caret Line="330" Column="48" TopLine="316"/>
-      </Position>
-      <Position>
-        <Filename Value="engine/spaceengine.pas"/>
-        <Caret Line="333" Column="23" TopLine="322"/>
-      </Position>
-      <Position>
-        <Filename Value="engine/spaceengine.pas"/>
-        <Caret Line="335" Column="13" TopLine="322"/>
-      </Position>
-      <Position>
-        <Filename Value="engine/spaceengine.pas"/>
-        <Caret Line="337" Column="23" TopLine="322"/>
-      </Position>
-      <Position>
-        <Filename Value="engine/spaceengine.pas"/>
-        <Caret Line="338" Column="44" TopLine="322"/>
-      </Position>
-      <Position>
-        <Filename Value="engine/spaceengine.pas"/>
-        <Caret Line="339" Column="52" TopLine="322"/>
-      </Position>
-      <Position>
-        <Filename Value="engine/spaceengine.pas"/>
-        <Caret Line="343" Column="22" TopLine="335"/>
-      </Position>
-      <Position>
-        <Filename Value="engine/spaceengine.pas"/>
-        <Caret Line="358" Column="3" TopLine="344"/>
-      </Position>
-      <Position>
-        <Filename Value="engine/spaceengine.pas"/>
-        <Caret Line="463" Column="31" TopLine="449"/>
-      </Position>
-      <Position>
-        <Filename Value="engine/spaceengine.pas"/>
-        <Caret Line="464" Column="30" TopLine="449"/>
+        <Filename Value="screen/screenspace.pas"/>
+        <Caret Line="297" Column="35" TopLine="272"/>
       </Position>
     </JumpHistory>
     <RunParams>

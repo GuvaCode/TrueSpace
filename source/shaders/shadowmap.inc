@@ -1,5 +1,5 @@
 // Shader ShadowMap
-shadowVs := '#version 330' + #10 + #13 +
+shadowMapVs := '#version 330' + #10 + #13 +
             'in vec3 vertexPosition;' + #10 + #13 +
             'in vec2 vertexTexCoord;' + #10 + #13 +
             'in vec3 vertexNormal;' + #10 + #13 +
@@ -20,7 +20,7 @@ shadowVs := '#version 330' + #10 + #13 +
             'gl_Position = mvp*vec4(vertexPosition, 1.0);' + #10 + #13 +
             '}';
 
-shadowFs := '#version 330' + #10 + #13 +
+shadowMapFs := '#version 330' + #10 + #13 +
             'in vec3 fragPosition;' + #10 + #13 +
             'in vec2 fragTexCoord;' + #10 + #13 +
             'in vec3 fragNormal;' + #10 + #13 +

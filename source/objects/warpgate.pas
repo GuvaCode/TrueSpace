@@ -13,13 +13,13 @@ type
 
   TWarpGlow = class(TSpaceActor)
   private
-    WarpTimer: Timer;
+    //WarpTimer: Timer;
     MaskFs: PChar;
     MaskShader: TShader;
     texDiffuse, texMask: TTexture;
     shaderFrame: Integer;
-    framesCounter: Integer;
-    baseTime : Double;
+  //  framesCounter: Integer;
+  //  baseTime : Double;
   public
     constructor Create(const AParent: TSpaceEngine); override;
     destructor Destroy; override;
@@ -81,7 +81,7 @@ begin
 
   //ActorModel.materials[0].shader := MaskShader;
   //scale := 0.1;
- StartTimer(@WarpTimer,6000);
+// StartTimer(@WarpTimer,6000);
 
 end;
 
@@ -98,12 +98,12 @@ procedure TWarpGlow.Update(const DeltaTime: Single);
 begin
   inherited Update(DeltaTime);
   InputYawLeft :=  - 0.02;
-   if TimerDone (@WarpTimer) then StartTimer(@WarpTimer,100 * Deltatime) else
+   {if TimerDone (@WarpTimer) then StartTimer(@WarpTimer,100 * Deltatime) else
    begin
     framesCounter :=1;//framesCounter + Round(WarpTimer.Lifetime);//  + 1;// div Round(DeltaTime);
     SetShaderValue(MaskShader, shaderFrame, @framesCounter, SHADER_UNIFORM_INT);
     UpdateTimer(@WarpTimer);
-    end;// else
+    end;// else  }
 end;
 
 procedure TWarpGlow.Render(ShowDebugAxes: Boolean; ShowDebugRay: Boolean);

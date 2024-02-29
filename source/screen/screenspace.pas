@@ -151,7 +151,7 @@ begin
   Engine.UsesSkyBox := True;
 
   Engine.DrawRadar := True;
-  Engine.OutlineShader:= False;
+  //Engine.OutlineShader:= False;
 
   Camera := TSpaceCamera.Create(True, 50);
 
@@ -232,6 +232,7 @@ begin
 end;
 
 procedure TScreenSpace.Update(MoveCount: Single);
+var lDir: TVector3;
 begin
   Engine.Update(MoveCount, Ship.Position);
   Engine.ClearDeadActor;
@@ -243,7 +244,7 @@ begin
 
 
   ApplyInputToShip(Ship, 1);
-  ApplyInputMouseToShip(Ship, 0.5);
+ // ApplyInputMouseToShip(Ship, 0.5);
 
   Camera.FollowActor(Ship, MoveCount);
   Engine.CrosshairFar.PositionCrosshairOnActor(Ship, 30);
@@ -272,6 +273,34 @@ begin
 //  Shot := TShot.Create(Engine);
 
   end;
+
+  lDir := Engine.LightDir;
+
+  if (IsKeyDown(KEY_SIX)) then
+      begin
+        if (lDir.x < 0.6) then
+            lDir.x += cameraSpeed * GetFps * MoveCount
+      end;
+
+      if (IsKeyDown(KEY_SEVEN)) then
+      begin
+        if (lDir.x > -0.6) then
+           lDir.x -= cameraSpeed * GetFps * MoveCount;
+      end;
+
+      if (IsKeyDown(KEY_EIGHT)) then
+      begin
+        if (lDir.z < 0.6) then
+            lDir.z += cameraSpeed * GetFps * MoveCount;
+      end;
+
+      if (IsKeyDown(KEY_NINE)) then
+      begin
+        if (lDir.z > -0.6) then
+            lDir.z -= cameraSpeed * GetFps * MoveCount;
+      end;
+
+      Engine.LightDir := lDir;
 
 end;
 
@@ -303,7 +332,7 @@ procedure TScreenSpace.Show;
 var Ship22: array [0..1] of TSpaceShip;
 begin
   inherited Show;
-  HideCursor;
+//  HideCursor;
   Randomize;
   Ship.SetShipTexture(1, MATERIAL_MAP_DIFFUSE, FModelAtlas[GetRandomValue(0,23)]);
 
