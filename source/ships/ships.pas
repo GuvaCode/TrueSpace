@@ -103,6 +103,7 @@ end;
 procedure TSpaceShip.Update(const DeltaTime: Single);
 begin
   inherited Update(DeltaTime);
+  if ActorModel.materialCount >= 2 then
   case FShipType of
     stChallenger, stForwarder, stStriker:
     ActorModel.materials[2].maps[MATERIAL_MAP_ALBEDO].color := BrightTrailColor;

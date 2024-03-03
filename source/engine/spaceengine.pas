@@ -112,7 +112,7 @@ type
     procedure GenerateSkyBox(Size: Integer; Color: TColorB; StarCount: Integer);
     procedure GenerateSkyBoxTexture(Filename: string);
     procedure SetSkyBoxFileName(AValue: String);
-
+    procedure ApplyInputToShip({%H-}Actor: TSpaceActor; step: Single);
     property Items[const Index: Integer]: TSpaceActor read GetModelActor; default;
     property Count: Integer read GetCount;
     property UsesSkyBox: Boolean read FUsesSkyBox write FUsesSkyBox;
@@ -176,6 +176,7 @@ type
     procedure Update(const DeltaTime: Single); virtual;
     procedure Render(ShowDebugAxes: Boolean; ShowDebugRay: Boolean); virtual;
     procedure SetShader(Shader: TShader);
+    procedure AssignModel(AModel: PModel);
 
     function GetForward:TVector3;
     function GetForward(Distance: Single): TVector3;
@@ -201,6 +202,7 @@ type
     procedure RotateLocalEuler(axis: TVector3; degrees: single);
     procedure RotationToActor(targetActor: TSpaceActor; z_axis: boolean = false; deflection: Single = 0.05);
     procedure RotationToVector(target: TVector3; z_axis: boolean = false; deflection: Single = 0.05);
+
     property ActorModel: TModel read FModel write SetModel;
     property MatixTransform: TMatrix read FModel.transform write FModel.transform;
     property Engine: TSpaceEngine read FEngine write FEngine;
@@ -563,7 +565,7 @@ begin
   ambient[0] := 0.5;
   ambient[1] := 0.5;
   ambient[2] := 0.5;
-  ambient[3] := 20.0;
+  ambient[3] := 2.0;
   SetShaderValue(shadowShader, ambientLoc, @ambient, SHADER_UNIFORM_VEC4);
 
   lightVPLoc := GetShaderLocation(shadowShader, 'lightVP');
@@ -882,6 +884,57 @@ begin
   TraceLog(LOG_Info,PChar('Space Engine: Image unload: ' + Avalue));
 end;
 
+procedure TSpaceEngine.ApplyInputToShip(Actor: TSpaceActor; step: Single);
+var triggerRight, triggerLeft: Single;
+begin
+  Actor.InputForward := 0;
+  if (IsKeyDown(KEY_W)) then Actor.InputForward += step;
+  if (IsKeyDown(KEY_S)) then Actor.InputForward -= step;
+
+  Actor.InputForward -= GetGamepadAxisMovement(0, GAMEPAD_AXIS_LEFT_Y);
+  Actor.InputForward := Clamp(Actor.InputForward, -step, step);
+
+  Actor.InputLeft := 0;
+  if (IsKeyDown(KEY_D)) then Actor.InputLeft -= step;
+  if (IsKeyDown(KEY_A)) then Actor.InputLeft += step;
+
+  Actor.InputLeft -= GetGamepadAxisMovement(0, GAMEPAD_AXIS_LEFT_X);
+  Actor.InputLeft := Clamp(Actor.InputLeft, -step, step);
+
+  Actor.InputUp := 0;
+  if (IsKeyDown(KEY_SPACE)) then Actor.InputUp += step;
+  if (IsKeyDown(KEY_LEFT_CONTROL)) then Actor.InputUp -= step;
+
+
+  triggerRight := GetGamepadAxisMovement(0, GAMEPAD_AXIS_RIGHT_TRIGGER);
+  triggerRight := Remap(triggerRight, -step, step, 0, step);
+
+  triggerLeft := GetGamepadAxisMovement(0, GAMEPAD_AXIS_LEFT_TRIGGER);
+  triggerLeft := Remap(triggerLeft, -step, step, 0, step);
+
+  Actor.InputUp += triggerRight;
+  Actor.InputUp -= triggerLeft;
+  Actor.InputUp := Clamp(Actor.InputUp, -step, step);
+
+  Actor.InputYawLeft := 0;
+  if (IsKeyDown(KEY_RIGHT)) then Actor.InputYawLeft -= step;
+  if (IsKeyDown(KEY_LEFT)) then Actor.InputYawLeft += step;
+
+  Actor.InputYawLeft -= GetGamepadAxisMovement(0, GAMEPAD_AXIS_RIGHT_X);
+  Actor.InputYawLeft := Clamp(Actor.InputYawLeft, -step, step);
+
+  Actor.InputPitchDown := 0;
+  if (IsKeyDown(KEY_UP)) then Actor.InputPitchDown += step;
+  if (IsKeyDown(KEY_DOWN)) then Actor.InputPitchDown -= step;
+
+  Actor.InputPitchDown += GetGamepadAxisMovement(0, GAMEPAD_AXIS_RIGHT_Y);
+  Actor.InputPitchDown := Clamp(Actor.InputPitchDown, -step, step);
+
+  Actor.InputRollRight := 0;
+  if (IsKeyDown(KEY_Q)) then Actor.InputRollRight -= step;
+  if (IsKeyDown(KEY_E)) then Actor.InputRollRight += step;
+end;
+
 
 
 { TGearSpaceActor }
@@ -1142,6 +1195,33 @@ var i: Integer;
 begin
   for i:=0 to FModel.materialCount-1  do
   FModel.materials[i].shader := Shader;
+end;
+
+procedure TSpaceActor.AssignModel(AModel: PModel);
+var outModel: PModel; meshIndex, matIndex: Integer;
+begin
+  outModel := new(PModel);
+  outModel^.meshCount := AModel^.meshCount;
+  outModel^.meshes := MemAlloc(sizeof(TMesh) * outModel^.meshCount);
+
+  outModel^.materialCount := AModel^.materialCount;
+  outModel^.materials := MemAlloc(sizeof(TMaterial) * outModel^.materialCount);
+  outModel^.meshMaterial := MemAlloc(sizeof(Integer) * outModel^.meshCount);
+
+  for meshIndex := 0 to outModel^.meshCount -1 do
+  begin
+    outModel^.meshes[meshIndex] := AModel^.meshes[meshIndex];
+    outModel^.meshMaterial[meshIndex] := AModel^.meshMaterial[meshIndex];
+  end;
+
+  for matIndex := 0 to outModel^.materialCount - 1 do
+  begin
+    outModel^.materials[matIndex] := AModel^.materials[matIndex];
+  end;
+
+//  if FModel <> nil then UnloadModel(FModel);
+  FModel := outModel^;
+
 end;
 
 

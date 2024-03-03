@@ -21,9 +21,7 @@ type
   end;
 
 
-
   { TScreenSpace }
-
   TScreenSpace = class(TGameScreen)
   private
     Engine: TSpaceEngine;
@@ -243,7 +241,7 @@ begin
 
 
 
-  ApplyInputToShip(Ship, 1);
+  Engine.ApplyInputToShip(Ship, 1);
  // ApplyInputMouseToShip(Ship, 0.5);
 
   Camera.FollowActor(Ship, MoveCount);
@@ -300,8 +298,8 @@ begin
             lDir.y -= cameraSpeed * 5 * MoveCount;
       end;
 
-     Engine.LightPosition :=  Ship.Position;
-     Engine.LightDir := Ship.GetForward(Vector3Distance(WarpIn.Position ,Ship.Position));
+     Engine.LightPosition :=  Vector3Create(30,8,30);
+     Engine.LightDir :=  Ship.GetForward(Vector3Distance(Engine.LightPosition, Vector3Zero ));
 end;
 
 procedure TScreenSpace.Render;
@@ -382,7 +380,7 @@ begin
   Ship22[0].Tag:=12;
   Ship22[0].SetShipTexture(1,MATERIAL_MAP_DIFFUSE, FModelAtlas[GetRandomValue(0,23)]);
 
-  Ship.ActorModel := CloneModel(@Ship22[0].ActorModel);
+  Ship.AssignModel(@Ship22[0].ActorModel);
   Ship.Scale:=3;
 
   TempMaterial := Ship22[0].ActorModel.materials^;
