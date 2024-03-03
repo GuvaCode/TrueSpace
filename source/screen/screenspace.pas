@@ -7,7 +7,7 @@ unit ScreenSpace;
 interface
 
 uses
-  RayLib, RayMath, Classes, SysUtils, ScreenManager, SpaceEngine, Ships, WarpGate, Global;
+  RayLib, RayMath,Cmem,  Classes, SysUtils, ScreenManager, SpaceEngine, Ships, WarpGate, Global;
 
 type
 
@@ -278,30 +278,30 @@ begin
 
   if (IsKeyDown(KEY_SIX)) then
       begin
-        if (lDir.x < 0.6) then
-            lDir.x += cameraSpeed * GetFps * MoveCount
+        if (lDir.x < 120.6) then
+            lDir.x += cameraSpeed * 5 * MoveCount
       end;
 
       if (IsKeyDown(KEY_SEVEN)) then
       begin
-        if (lDir.x > -0.6) then
-           lDir.x -= cameraSpeed * GetFps * MoveCount;
+        if (lDir.x > -120.6) then
+           lDir.x -= cameraSpeed * 5 * MoveCount;
       end;
 
       if (IsKeyDown(KEY_EIGHT)) then
       begin
-        if (lDir.z < 0.6) then
-            lDir.z += cameraSpeed * GetFps * MoveCount;
+        if (lDir.y < 120.6) then
+            lDir.y += cameraSpeed * 5 * MoveCount;
       end;
 
       if (IsKeyDown(KEY_NINE)) then
       begin
-        if (lDir.z > -0.6) then
-            lDir.z -= cameraSpeed * GetFps * MoveCount;
+        if (lDir.y > -120.6) then
+            lDir.y -= cameraSpeed * 5 * MoveCount;
       end;
 
-      Engine.LightDir := lDir;
-
+     Engine.LightPosition :=  Ship.Position;
+     Engine.LightDir := Ship.GetForward(Vector3Distance(WarpIn.Position ,Ship.Position));
 end;
 
 procedure TScreenSpace.Render;
@@ -328,8 +328,46 @@ begin
   EndDrawing();
 end;
 
+
+function CloneModel(Model: PModel): TModel;
+var outModel: PModel; meshIndex, matIndex: Integer;
+begin
+  outModel := new(PModel);
+  outModel^.meshCount := Model^.meshCount;
+  outModel^.meshes := MemAlloc(sizeof(TMesh) * outModel^.meshCount -  1);
+
+  outModel^.materialCount := Model^.materialCount;
+  outModel^.materials := MemAlloc(sizeof(TMaterial) * outModel^.materialCount - 1);
+
+  outModel^.meshMaterial := MemAlloc(sizeof(Integer) * outModel^.meshCount);
+
+  writeLn('MESHES COUNT ------------------------------------------------------');
+  writeLn(outModel^.meshCount);
+  writeLn(Model^.meshCount);
+  writeLn('-------------------------------------------------------------------');
+
+  for meshIndex := 0 to outModel^.meshCount do
+  begin
+    outModel^.meshes[meshIndex] := model^.meshes[meshIndex];
+    outModel^.meshMaterial[meshIndex] := model^.meshMaterial[meshIndex];
+  end;
+
+  for matIndex := 0 to outModel^.materialCount - 1 do
+  begin
+    //outModel^.materials[matIndex] := LoadMaterialDefault;
+    outModel^.materials[matIndex] := model^.materials[matIndex];
+  end;
+
+
+
+  result := outModel^;
+
+end;
+
 procedure TScreenSpace.Show;
 var Ship22: array [0..1] of TSpaceShip;
+    TempMaterial: TMaterial;
+    i: integer;
 begin
   inherited Show;
 //  HideCursor;
@@ -342,22 +380,45 @@ begin
   Ship22[0].Position := Vector3Create(8,8,-8);
   Ship22[0].DoCollision:= TRUE;
   Ship22[0].RadarColor := BLUE;
-  Ship22[0].RadarStrinig:='Neutral22';
+  Ship22[0].RadarStrinig:='Neutral';
   Ship22[0].Scale:=5.1;
   Ship22[0].Tag:=12;
   Ship22[0].SetShipTexture(1,MATERIAL_MAP_DIFFUSE, FModelAtlas[GetRandomValue(0,23)]);
 
-
+  TempMaterial := Ship22[0].ActorModel.materials^;
   Ship22[1] := TSpaceShip.Create(Engine);
-  Ship22[1].ActorModel := LoadModel(GetAppDir('data' + '/models/ships/Striker.glb'));
-  Ship22[1].Position := Vector3Create(8,-8,-8);
+
+
+  Ship22[1].ActorModel :=  CloneModel(@Ship22[0].ActorModel);
+  //(Ship22[1].ActorModel.materials^);
+
+//  for i:= 0 to Ship22[0].ActorModel.meshCount-1 do
+//  Ship22[1].ActorModel.meshes[i] := Ship22[0].ActorModel.meshes[i];
+  //LoadModelFromMesh( Ship22[0].ActorModel.meshes[1]);//  LoadModel(GetAppDir('data' + '/models/ships/Striker.glb'));
+
+
+
+
+ { Ship22[1].ActorModel.materials^:=TempMaterial;
+
+
+  for i:= 0 to Ship22[0].ActorModel.meshCount-1 do
+  SetModelMeshMaterial(@Ship22[1].ActorModel  ,i, MATERIAL_MAP_DIFFUSE);
+    }
+
+
+  Ship22[1].Position := Vector3Create(8, 6,- 9);
   Ship22[1].DoCollision:= TRUE;
   Ship22[1].RadarColor := BLUE;
-  Ship22[1].RadarStrinig:='Neutral222';
+
+  Ship22[1].RadarStrinig:='Neutral';
   Ship22[1].Scale:=5.1;
-  Ship22[1].Tag:=12;
-  Ship22[1].SetShipTexture(1,MATERIAL_MAP_DIFFUSE, FModelAtlas[GetRandomValue(0,23)]);
-  Ship22[0].SetShipTexture(1,MATERIAL_MAP_DIFFUSE, FModelAtlas[GetRandomValue(0,23)]);
+  Ship22[1].Tag:=13;
+//  Ship22[1].SetShipTexture(0,MATERIAL_MAP_DIFFUSE, FModelAtlas[GetRandomValue(0,23)]);
+
+  //  Ship22[1].BrightTrailColor := BLUE;
+  // Ship22[1].TrailColor := BLUE;
+  //Ship22[0].SetShipTexture(0,MATERIAL_MAP_DIFFUSE, FModelAtlas[GetRandomValue(0,23)]);
 end;
 
 procedure TScreenSpace.Hide;

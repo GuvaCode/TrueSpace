@@ -105,7 +105,7 @@ begin
   inherited Update(DeltaTime);
   case FShipType of
     stChallenger, stForwarder, stStriker:
-    ActorModel.materials[2].maps[MATERIAL_MAP_ALBEDO].color := BrightTrailColor;
+   // ActorModel.materials[2].maps[MATERIAL_MAP_ALBEDO].color := BrightTrailColor;
   end;
 end;
 

@@ -77,6 +77,7 @@ type
     FActorList: TList;
     FDeadActorList: TList;
     FDrawRadar: Boolean;
+    FLightPosition: TVector3;
     FOutlineShader: Boolean;
     FSkyBoxQuality: TSkyBoxQuality;
     FSpaceDust: TSpaceDust;
@@ -119,7 +120,7 @@ type
     property SkyBoxQuality: TSkyBoxQuality read FSkyBoxQuality write FSkyBoxQuality;
     property OutlineShader: Boolean read FOutlineShader write FOutlineShader;
     property LightDir: TVector3 read FLightDir write FLightDir;
-
+    property LightPosition: TVector3 read FLightPosition write FLightPosition;
   end;
 
   { TSpaceActor }
@@ -559,10 +560,10 @@ begin
   SetShaderValue(shadowShader, lightColLoc, @lightColorNormalized, SHADER_UNIFORM_VEC4);
 
   ambientLoc := GetShaderLocation(shadowShader, 'ambient');
-  ambient[0] := 0.1;
-  ambient[1] := 0.1;
-  ambient[2] := 0.1;
-  ambient[3] := 0.1;
+  ambient[0] := 0.5;
+  ambient[1] := 0.5;
+  ambient[2] := 0.5;
+  ambient[3] := 20.0;
   SetShaderValue(shadowShader, ambientLoc, @ambient, SHADER_UNIFORM_VEC4);
 
   lightVPLoc := GetShaderLocation(shadowShader, 'lightVP');
@@ -679,9 +680,13 @@ begin
   CameraPos := Camera.Camera.position;
   SetShaderValue(shadowShader, shadowShader.locs[SHADER_LOC_VECTOR_VIEW], @cameraPos, SHADER_UNIFORM_VEC3);
 
-  lightDir := Vector3Normalize(lightDir);
-  lightCam.position := Vector3Scale(lightDir, -15.0);
-  SetShaderValue(shadowShader, lightDirLoc, @lightDir, SHADER_UNIFORM_VEC3);
+  FlightDir := Vector3Normalize(FlightDir);
+
+  lightCam.position := FLightPosition;//Vector3Create(50,0,50);
+
+  //lightCam.position := Vector3Scale(FlightDir, 150.0);
+
+  SetShaderValue(shadowShader, lightDirLoc, @FlightDir, SHADER_UNIFORM_VEC3);
 
   BeginTextureMode(shadowMap);
     ClearBackground(WHITE);
@@ -726,6 +731,8 @@ begin
   CrosshairFar.DrawCrosshair();
 
   DrawGrid(10, 1.0);        // Draw a grid
+ // DrawSphere(lightCam.position,1,RED);
+  DrawSphereWires(lightCam.position,1,8,8,RED);
 
   FSpaceDust.Draw(Camera.GetPosition(), DustVelocity, DustDrawDots);
   Camera.EndDrawing;
