@@ -16,10 +16,9 @@
         <Filename Value="screen/screenspace.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="ScreenSpace"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="4"/>
-        <TopLine Value="334"/>
-        <CursorPos X="51" Y="355"/>
+        <TopLine Value="327"/>
+        <CursorPos X="69" Y="343"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
       </Unit>
@@ -61,7 +60,7 @@
         <IsPartOfProject Value="True"/>
         <UnitName Value="ScreenLoading"/>
         <EditorIndex Value="1"/>
-        <TopLine Value="84"/>
+        <TopLine Value="81"/>
         <CursorPos X="52" Y="81"/>
         <UsageCount Value="123"/>
         <Loaded Value="True"/>
@@ -70,9 +69,10 @@
         <Filename Value="ships/ships.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="Ships"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="2"/>
-        <TopLine Value="25"/>
-        <CursorPos X="17" Y="35"/>
+        <TopLine Value="93"/>
+        <CursorPos X="70" Y="108"/>
         <UsageCount Value="117"/>
         <Loaded Value="True"/>
       </Unit>
@@ -81,7 +81,7 @@
         <IsPartOfProject Value="True"/>
         <UnitName Value="WarpGate"/>
         <EditorIndex Value="3"/>
-        <TopLine Value="62"/>
+        <TopLine Value="141"/>
         <CursorPos X="5" Y="82"/>
         <UsageCount Value="85"/>
         <Loaded Value="True"/>
@@ -92,7 +92,7 @@
         <EditorIndex Value="5"/>
         <TopLine Value="148"/>
         <CursorPos Y="200"/>
-        <UsageCount Value="36"/>
+        <UsageCount Value="37"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
@@ -271,7 +271,7 @@
         <EditorIndex Value="12"/>
         <TopLine Value="158"/>
         <CursorPos X="17" Y="183"/>
-        <UsageCount Value="21"/>
+        <UsageCount Value="22"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
@@ -328,7 +328,7 @@
         <EditorIndex Value="11"/>
         <TopLine Value="85"/>
         <CursorPos X="55" Y="94"/>
-        <UsageCount Value="66"/>
+        <UsageCount Value="67"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
@@ -440,14 +440,6 @@
     <JumpHistory HistoryIndex="29">
       <Position>
         <Filename Value="screen/screenspace.pas"/>
-        <Caret Line="355" Column="5" TopLine="337"/>
-      </Position>
-      <Position>
-        <Filename Value="screen/screenspace.pas"/>
-        <Caret Line="340" Column="70" TopLine="327"/>
-      </Position>
-      <Position>
-        <Filename Value="screen/screenspace.pas"/>
         <Caret Line="355" Column="3" TopLine="332"/>
       </Position>
       <Position>
@@ -557,6 +549,14 @@
       <Position>
         <Filename Value="screen/screenspace.pas"/>
         <Caret Line="358" Column="14" TopLine="341"/>
+      </Position>
+      <Position>
+        <Filename Value="screen/screenspace.pas"/>
+        <Caret Line="197" Column="45" TopLine="359"/>
+      </Position>
+      <Position>
+        <Filename Value="screen/screenspace.pas"/>
+        <Caret Line="385" Column="54" TopLine="366"/>
       </Position>
     </JumpHistory>
     <RunParams>
