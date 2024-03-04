@@ -68,7 +68,31 @@ shadowMapFs := '#version 330' + #10 + #13 +
             '}' + #10 + #13 +
             '}' + #10 + #13 +
             '}' + #10 + #13 +
-            'finalColor = mix(finalColor, vec4(0, 0, 0, 1), float(shadowCounter) / float(numSamples));' + #10 + #13 +
-            'finalColor += texelColor*(ambient/5.0)*colDiffuse;' + #10 + #13 +
-            'finalColor = pow(finalColor, vec4(1.0/2.2));' + #10 + #13 +
-            '}'; 
+
+
+         // 'NdotL = 0.5;' +#10+#13+
+
+         // 'finalColor = mix(finalColor, vec4(0, 0, 0, 1), float(shadowCounter) / float(numSamples));' + #10 + #13 +
+
+          //'finalColor +=  texelColor*(ambient /5.0 )*colDiffuse;' + #10 + #13 +
+         // 'finalColor += texelColor * colDiffuse * NdotL  ;'+ #10 + #13 +
+
+        //  'finalColor.a = 1.0;' + #10 + #13+
+        //  'finalColor += texelColor*(ambient/4.0)*colDiffuse;' + #10 + #13 +
+         // 'finalColor = pow(finalColor, vec4(1.0/1.9));' + #10 + #13 +
+'NdotL = 30.0;' +#10+#13+
+
+'finalColor = mix(finalColor, vec4(0, 0, 0, 1), float(shadowCounter) / float(numSamples));' + #10 + #13 +
+
+// Add ambient lighting whether in shadow or not
+//'finalColor += texelColor*(ambient/ 10.0)* colDiffuse;' + #10 + #13 +
+'finalColor += texelColor*(ambient/10.0)* colDiffuse * (NdotL / 10.0);' + #10 + #13 +
+// Gamma correction
+// 'finalColor = pow(finalColor, vec4(2.0/2.2));' + #10 + #13 +
+ //'finalColor = pow(finalColor,  vec4(1.0 / 2.5 ));' + #10 + #13 +
+ // 'finalColor = mix(finalColor, vec4(1.0/2.0), specCo );' + #10 + #13 +
+'}';
+
+
+
+

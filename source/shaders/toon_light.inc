@@ -1,3 +1,4 @@
+// outline shader
 normFs := '#version 330'                  + #10 + #13 +
           'in vec3 modNorm;'              + #10 + #13 +
           'out vec4 finalColor;'          + #10 + #13 +

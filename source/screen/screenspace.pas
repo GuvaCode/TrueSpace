@@ -150,11 +150,15 @@ begin
 
   Engine.DrawRadar := True;
   //Engine.OutlineShader:= False;
+  Engine.ShadowLight:= False;
 
   Camera := TSpaceCamera.Create(True, 50);
 
   Ship := TSpaceShip.Create(Engine);
-  Ship.ActorModel := LoadModel(GetAppDir('data' + '/models/ships/Forwarder.glb'));
+
+  //Ship.
+  Ship.LoadModel(GetAppDir('data' + '/models/ships/Forwarder.glb'));
+
   Ship.DoCollision := True;
   Ship.RadarStrinig:='Player';
   Ship.RadarColor := ColorCreate(0,128,0,120);
@@ -167,7 +171,7 @@ begin
   Ship2 := TSpaceShipActor.Create(Engine);
 
 
-  Ship2.ActorModel := LoadModel(GetAppDir('data' + '/models/ships/Striker.glb'));
+  Ship2.LoadModel(GetAppDir('data' + '/models/ships/Striker.glb'));
   Ship2.Position := Vector3Create(10,10,10);
   Ship2.DoCollision:= TRUE;
   Ship2.RadarColor := BLUE;
@@ -180,7 +184,7 @@ begin
 
   Ship3 := TSpaceShipActor.Create(Engine);
 //  Ship3.ActorModel := Test.model;
-  Ship3.ActorModel := LoadModel(GetAppDir('data' + '/models/ships/Forwarder.glb'));
+  Ship3.LoadModel(GetAppDir('data' + '/models/ships/Forwarder.glb'));
  // Ship3.Assign(Ship2.ActorModel);
 
 
@@ -299,7 +303,7 @@ begin
       end;
 
      Engine.LightPosition :=  Vector3Create(30,8,30);
-     Engine.LightDir :=  Ship.GetForward(Vector3Distance(Engine.LightPosition, Vector3Zero ));
+     Engine.LightDir :=   WarpGlow.GetForward(Vector3Distance(Engine.LightPosition, WarpGlow.Position ));
 end;
 
 procedure TScreenSpace.Render;
@@ -326,39 +330,6 @@ begin
   EndDrawing();
 end;
 
-
-function CloneModel(Model: PModel): TModel;
-var outModel: PModel; meshIndex, matIndex: Integer;
-begin
-  outModel := new(PModel);
-  outModel^.meshCount := Model^.meshCount;
-  outModel^.meshes := MemAlloc(sizeof(TMesh) * outModel^.meshCount);
-
-  outModel^.materialCount := Model^.materialCount;
-  outModel^.materials := MemAlloc(sizeof(TMaterial) * outModel^.materialCount);
-
-  outModel^.meshMaterial := MemAlloc(sizeof(Integer) * outModel^.meshCount);
-
-  writeLn('MESHES COUNT ------------------------------------------------------');
-  writeLn(outModel^.meshCount);
-  writeLn(Model^.meshCount);
-  writeLn('-------------------------------------------------------------------');
-
-  for meshIndex := 0 to outModel^.meshCount -1 do
-  begin
-    outModel^.meshes[meshIndex] := model^.meshes[meshIndex];
-    outModel^.meshMaterial[meshIndex] := model^.meshMaterial[meshIndex];
-  end;
-
-  for matIndex := 0 to outModel^.materialCount - 1 do
-  begin
-    outModel^.materials[matIndex] := model^.materials[matIndex];
-  end;
-
-  result := outModel^;
-
-end;
-
 procedure TScreenSpace.Show;
 var Ship22: array [0..1] of TSpaceShip;
     TempMaterial: TMaterial;
@@ -371,7 +342,7 @@ begin
 
 
   Ship22[0] := TSpaceShip.Create(Engine);
-  Ship22[0].ActorModel := LoadModel(GetAppDir('data' + '/models/ships/Striker.glb'));
+  Ship22[0].LoadModel(GetAppDir('data' + '/models/ships/Striker.glb'));
   Ship22[0].Position := Vector3Create(8,8,-8);
   Ship22[0].DoCollision:= TRUE;
   Ship22[0].RadarColor := BLUE;
@@ -387,7 +358,7 @@ begin
   Ship22[1] := TSpaceShip.Create(Engine);
 
 
-  Ship22[1].ActorModel :=  CloneModel(@Ship22[0].ActorModel);
+  Ship22[1].AssignModel(@Ship22[0].ActorModel);
   //(Ship22[1].ActorModel.materials^);
 
 //  for i:= 0 to Ship22[0].ActorModel.meshCount-1 do

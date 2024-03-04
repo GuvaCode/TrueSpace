@@ -63,16 +63,16 @@ constructor TWarpGlow.Create(const AParent: TSpaceEngine);
 begin
    inherited Create(AParent);
   Engine := AParent;
-  ActorModel := LoadModel(GetAppDir('data' + '/models/building/warp_glow.glb'));
+  FModel := raylib.LoadModel(GetAppDir('data' + '/models/building/warp_glow.glb'));
 
   {$I ../shaders/mask.inc}
   MaskShader := LoadShaderFromMemory(nil, MaskFs);
   texDiffuse := LoadTexture(GetAppDir('data' + '/textures/chaos.png'));
 
-  ActorModel.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture := texDiffuse;
+  FModel.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture := texDiffuse;
   texMask := LoadTexture(GetAppDir('data' + '/textures/Hex_glow_roughness.png'));
 
-  ActorModel.materials[0].maps[MATERIAL_MAP_EMISSION].texture := texMask;
+  FModel.materials[0].maps[MATERIAL_MAP_EMISSION].texture := texMask;
   MaskShader.locs[SHADER_LOC_MAP_EMISSION] := GetShaderLocation(MaskShader, 'mask');
 
   shaderFrame := GetShaderLocation(MaskShader, 'frame');
@@ -125,7 +125,7 @@ constructor TWarpIn.Create(const AParent: TSpaceEngine);
 begin
   inherited Create(AParent);
   Engine := AParent;
-  ActorModel := LoadModel(GetAppDir('data' + '/models/building/warp_in.glb'));
+  FModel := raylib.LoadModel(GetAppDir('data' + '/models/building/warp_in.glb'));
   DoCollision:=False;
   //scale := 0.8;
 end;
@@ -159,7 +159,7 @@ constructor TWarpOut.Create(const AParent: TSpaceEngine);
 begin
   inherited Create(AParent);
   Engine := AParent;
-  ActorModel := LoadModel(GetAppDir('data' + '/models/building/warp_out.glb'));
+  FModel := raylib.LoadModel(GetAppDir('data' + '/models/building/warp_out.glb'));
   DoCollision:=False;
 end;
 

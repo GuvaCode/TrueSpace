@@ -5,7 +5,7 @@ unit SpaceEngine;
 interface
 
 uses
-  RayLib, RayMath, RlGl, Math, DigestMath, Collider, Global, Classes, SysUtils;
+  RayLib, RayMath, RlGl, rlights,  Math, DigestMath, Collider, Global, Classes, SysUtils;
 
 type
   TSkyBoxQuality = (SBQOriginal, SBQLow, SBQVeryLow);
@@ -79,6 +79,7 @@ type
     FDrawRadar: Boolean;
     FLightPosition: TVector3;
     FOutlineShader: Boolean;
+    FShadowLight: Boolean;
     FSkyBoxQuality: TSkyBoxQuality;
     FSpaceDust: TSpaceDust;
     FSkyBox: TModel;
@@ -86,7 +87,8 @@ type
     FNormShader, FOutline: TShader;
     FTarget: TRenderTexture2D;
     LightCam: TCamera3D; // Lighting camera;
-    ShadowShader: TShader; // Light and shadow shader
+    ShadowShader, LightShader: TShader; // Light and shadow shader
+    Light: TLight;
     FLightDir: TVector3;
     lightColor: TColorB;
     lightColorNormalized: TVector4;
@@ -121,6 +123,7 @@ type
     property OutlineShader: Boolean read FOutlineShader write FOutlineShader;
     property LightDir: TVector3 read FLightDir write FLightDir;
     property LightPosition: TVector3 read FLightPosition write FLightPosition;
+    property ShadowLight: Boolean read FShadowLight write FShadowLight;
   end;
 
   { TSpaceActor }
@@ -131,7 +134,7 @@ type
     FDoCollision: Boolean;
     FEngine: TSpaceEngine;
     FMaxSpeed: Single;
-    FModel: TModel;
+
     FRadarColor: TColorB;
     FRadarString: PChar;
     FSmoothForward: Single;
@@ -158,7 +161,8 @@ type
     procedure SetModel(AValue: TModel);
     procedure SetPosition(AValue: TVector3);
     procedure SetScale(AValue: Single);
-
+  protected
+    FModel: TModel;
   public
     InputForward: Single;
     InputLeft: Single;
@@ -175,9 +179,9 @@ type
     procedure OnCollision(const {%H-}Actor: TSpaceActor); virtual;
     procedure Update(const DeltaTime: Single); virtual;
     procedure Render(ShowDebugAxes: Boolean; ShowDebugRay: Boolean); virtual;
-    procedure SetShader(Shader: TShader);
+    procedure SetShader(Shader: TShader); virtual;
     procedure AssignModel(AModel: PModel);
-
+    procedure LoadModel(AFileName: PChar);
     function GetForward:TVector3;
     function GetForward(Distance: Single): TVector3;
 
@@ -203,7 +207,7 @@ type
     procedure RotationToActor(targetActor: TSpaceActor; z_axis: boolean = false; deflection: Single = 0.05);
     procedure RotationToVector(target: TVector3; z_axis: boolean = false; deflection: Single = 0.05);
 
-    property ActorModel: TModel read FModel write SetModel;
+    property ActorModel: TModel read FModel;// write SetModel;
     property MatixTransform: TMatrix read FModel.transform write FModel.transform;
     property Engine: TSpaceEngine read FEngine write FEngine;
     property Position: TVector3 read FPosition write SetPosition;
@@ -259,6 +263,7 @@ type
 
 
 implementation
+
 
 const RungDistance = 0.5;
 const RungTimeToLive = 0.5;
@@ -499,7 +504,7 @@ end;
 
 constructor TSpaceEngine.Create;
 var CubeMesh: TMesh;
-    skyboxVs, skyboxFs, shadowMapVs, shadowMapFs: PChar;
+    skyboxVs, skyboxFs, shadowMapVs, shadowMapFs, LightVs, LightFs: PChar;
     normFs, normVs, outlineFs: PChar;
     SkyBoxMap: Integer = MATERIAL_MAP_CUBEMAP;
     UsesHDR: Boolean = False;
@@ -516,7 +521,7 @@ begin
   FSkyBox := LoadModelFromMesh(CubeMesh);
   FSkyBoxQuality := SBQOriginal;
   FUsesSkyBox := false;
-
+  FShadowLight := true;
   // skybox shader
   {$I ../shaders/skybox.inc}
   FSkyBox.materials[0].shader := LoadShaderFromMemory(SkyBoxVs, SkyBoxFs);
@@ -539,14 +544,6 @@ begin
 
   //outline shader
   FOutline := LoadShaderFromMemory(nil, outlineFs);
-
-  // lighting shader
-  //FLightShader := LoadShaderFromMemory(toonVs, toonFs);
-  //FLightShader.locs[SHADER_LOC_MATRIX_MODEL] := GetShaderLocation(FLightShader, 'matModel');
-
-
-  // make a light (max 4 but we're only using 1)   // todo set light position
-  //FLight := CreateLight(LIGHT_POINT, Vector3Create( 2,4,4 ), Vector3Zero(), WHITE, FLightShader);
   FTarget := LoadRenderTexture(GetScreenWidth, GetScreenHeight);
 
   {$I ../shaders/shadowmap.inc}
@@ -562,10 +559,10 @@ begin
   SetShaderValue(shadowShader, lightColLoc, @lightColorNormalized, SHADER_UNIFORM_VEC4);
 
   ambientLoc := GetShaderLocation(shadowShader, 'ambient');
-  ambient[0] := 0.5;
-  ambient[1] := 0.5;
-  ambient[2] := 0.5;
-  ambient[3] := 2.0;
+    ambient[0] := 1.0;
+    ambient[1] := 1.0;
+    ambient[2] := 1.0;
+    ambient[3] := 1.0;
   SetShaderValue(shadowShader, ambientLoc, @ambient, SHADER_UNIFORM_VEC4);
 
   lightVPLoc := GetShaderLocation(shadowShader, 'lightVP');
@@ -583,6 +580,13 @@ begin
   lightCam.up := Vector3Create( 0.0, 1.0, 0.0 );
   lightCam.fovy := 20.0;
 
+  // lighting shader
+  {$I ../shaders/light.inc}
+  lightShader := LoadShaderFromMemory(LightVs, LightFs);
+  lightShader.locs[SHADER_LOC_MATRIX_MODEL] := GetShaderLocation(lightShader, 'matModel');
+  // make a light (max 4 but we're only using 1)
+  Light := CreateLight(LIGHT_POINT, Vector3Create( 2,4,4 ), Vector3Zero(), WHITE, lightShader);
+
 
 end;
 
@@ -598,6 +602,11 @@ begin
 
   FActorList.Free;
   FDeadActorList.Free;
+
+  UnloadShader(FNormShader);
+  UnloadShader(FOutline);
+  UnloadShader(shadowShader);
+  UnloadShader(lightShader);
 
   TraceLog(LOG_Info,PChar('Space Engine: Engine Destroy'));
   inherited Destroy;
@@ -664,6 +673,17 @@ begin
     Camera.EndDrawing;
   end;
 
+  // Lighting Shader
+  if not FShadowLight then
+  begin
+    light.position := lightPosition;
+    // update the light shader with the camera view position
+    SetShaderValue(lightShader, lightShader.locs[SHADER_LOC_VECTOR_VIEW], @camera.camera.position, SHADER_UNIFORM_VEC3);
+    SetShaderValue(FnormShader, lightShader.locs[SHADER_LOC_VECTOR_VIEW], @Camera.camera.position, SHADER_UNIFORM_VEC3);
+    UpdateLightValues(lightShader, light);
+    UpdateLightValues(FnormShader, light);
+  end;
+
  // render first to the normals texture for outlining
  // to a texture
   BeginTextureMode(FTarget);
@@ -680,51 +700,53 @@ begin
   EndTextureMode();
 
   CameraPos := Camera.Camera.position;
-  SetShaderValue(shadowShader, shadowShader.locs[SHADER_LOC_VECTOR_VIEW], @cameraPos, SHADER_UNIFORM_VEC3);
 
-  FlightDir := Vector3Normalize(FlightDir);
 
-  lightCam.position := FLightPosition;//Vector3Create(50,0,50);
-
-  //lightCam.position := Vector3Scale(FlightDir, 150.0);
-
-  SetShaderValue(shadowShader, lightDirLoc, @FlightDir, SHADER_UNIFORM_VEC3);
-
-  BeginTextureMode(shadowMap);
-    ClearBackground(WHITE);
-    BeginMode3D(lightCam);
-      lightView := rlGetMatrixModelview();
-      lightProj := rlGetMatrixProjection();
-      for i := 0 to FActorList.Count - 1 do
-      begin
-        if not TSpaceActor(FActorList.Items[i]).ClassNameIs('TWarpGlow') then
-        TSpaceActor(FActorList.Items[i]).SetShader(shadowShader);
-        TSpaceActor(FActorList.Items[i]).Render(ShowDebugAxes,ShowDebugRay);
-        TSpaceActor(FActorList.Items[i]).FProject := Projection(TSpaceActor(FActorList.Items[i]).FPosition, view, perps);
-      end;
-    EndMode3D();
-  EndTextureMode();
+  if FShadowLight then
+  begin
+    SetShaderValue(shadowShader, shadowShader.locs[SHADER_LOC_VECTOR_VIEW], @cameraPos, SHADER_UNIFORM_VEC3);
+    FlightDir := Vector3Normalize(FlightDir);
+    lightCam.position := FLightPosition;//Vector3Create(50,0,50);
+    SetShaderValue(shadowShader, lightDirLoc, @FlightDir, SHADER_UNIFORM_VEC3);
+    BeginTextureMode(shadowMap);
+      ClearBackground(WHITE);
+      BeginMode3D(lightCam);
+        lightView := rlGetMatrixModelview();
+        lightProj := rlGetMatrixProjection();
+        for i := 0 to FActorList.Count - 1 do
+        begin
+          if not TSpaceActor(FActorList.Items[i]).ClassNameIs('TWarpGlow') then
+          TSpaceActor(FActorList.Items[i]).SetShader(shadowShader);
+          TSpaceActor(FActorList.Items[i]).Render(ShowDebugAxes,ShowDebugRay);
+          TSpaceActor(FActorList.Items[i]).FProject := Projection(TSpaceActor(FActorList.Items[i]).FPosition, view, perps);
+        end;
+      EndMode3D();
+    EndTextureMode();
+  end;
 
   Camera.BeginDrawing;
-////
-  lightViewProj := MatrixMultiply(lightView, lightProj);
-  SetShaderValueMatrix(shadowShader, lightVPLoc, lightViewProj);
 
-  rlEnableShader(shadowShader.id);
-  slot := 10; // Can be anything 0 to 15, but 0 will probably be taken up
-  rlActiveTextureSlot(10);
-  rlEnableTexture(shadowMap.depth.id);
-  rlSetUniform(shadowMapLoc, @slot, SHADER_UNIFORM_INT, 1);
-////
+  if FShadowLight then
+  begin
+    lightViewProj := MatrixMultiply(lightView, lightProj);
+    SetShaderValueMatrix(shadowShader, lightVPLoc, lightViewProj);
+    rlEnableShader(shadowShader.id);
+    slot := 10; // Can be anything 0 to 15, but 0 will probably be taken up
+    rlActiveTextureSlot(10);
+    rlEnableTexture(shadowMap.depth.id);
+    rlSetUniform(shadowMapLoc, @slot, SHADER_UNIFORM_INT, 1);
+  end;
 
   CrosshairNear.DrawCrosshair();
   CrosshairFar.DrawCrosshair();
 
-
   for i := 0 to FActorList.Count - 1 do
   begin
-    if not TSpaceActor(FActorList.Items[i]).ClassNameIs('TWarpGlow') then
-    TSpaceActor(FActorList.Items[i]).SetShader(shadowShader);
+  if not TSpaceActor(FActorList.Items[i]).ClassNameIs('TWarpGlow') then
+  if FShadowLight then
+    TSpaceActor(FActorList.Items[i]).SetShader(shadowShader)
+    else
+    TSpaceActor(FActorList.Items[i]).SetShader(lightShader);
     TSpaceActor(FActorList.Items[i]).Render(ShowDebugAxes,ShowDebugRay);
     TSpaceActor(FActorList.Items[i]).FProject := Projection(TSpaceActor(FActorList.Items[i]).FPosition, view, perps);
   end;
@@ -732,18 +754,23 @@ begin
   CrosshairNear.DrawCrosshair();
   CrosshairFar.DrawCrosshair();
 
-  DrawGrid(10, 1.0);        // Draw a grid
- // DrawSphere(lightCam.position,1,RED);
-  DrawSphereWires(lightCam.position,1,8,8,RED);
+  if (ShowDebugAxes) or (ShowDebugRay) then
+  begin
+   DrawGrid(10, 1.0);        // Draw a grid
+   DrawSphereWires(lightCam.position,1,8,8,RED);
+  end;
 
   FSpaceDust.Draw(Camera.GetPosition(), DustVelocity, DustDrawDots);
   Camera.EndDrawing;
 
   // show the modified normals texture
-  //DrawTexturePro(Ftarget.texture,
-  //RectangleCreate( 0, 0, Ftarget.texture.width, -Ftarget.texture.height ),
-  //RectangleCreate( 0, 0, Ftarget.texture.width/8.0, Ftarget.texture.height/8.0 ),
-  //Vector2Create(0,0), 0, WHITE);
+  if (ShowDebugAxes) or (ShowDebugRay) then
+  begin
+    DrawTexturePro(Ftarget.texture,
+    RectangleCreate( 0, 0, Ftarget.texture.width, -Ftarget.texture.height ),
+    RectangleCreate( 0, 0, Ftarget.texture.width/8.0, Ftarget.texture.height/8.0 ),
+    Vector2Create(0,0), 0, WHITE);
+  end;
 
   // outline shader uses the normal texture to overlay outlines
  if FOutlineShader then
@@ -966,8 +993,6 @@ begin
                               Vector3Scale(GetModelBoundingBox(FModel).max,FScale));
 end;
 
-
-
 constructor TSpaceActor.Create(const AParent: TSpaceEngine);
 begin
   FEngine := AParent;
@@ -984,11 +1009,7 @@ begin
   FThrottleResponse:= 10;
   TurnRate:= 180;
   TurnResponse:= 10;
-
   FAlignToHorizon := True;
-
-
-
   Engine.Add(Self);
 end;
 
@@ -1198,30 +1219,14 @@ begin
 end;
 
 procedure TSpaceActor.AssignModel(AModel: PModel);
-var outModel: PModel; meshIndex, matIndex: Integer;
 begin
-  outModel := new(PModel);
-  outModel^.meshCount := AModel^.meshCount;
-  outModel^.meshes := MemAlloc(sizeof(TMesh) * outModel^.meshCount);
+  FModel := ModelClone(AModel);
+end;
 
-  outModel^.materialCount := AModel^.materialCount;
-  outModel^.materials := MemAlloc(sizeof(TMaterial) * outModel^.materialCount);
-  outModel^.meshMaterial := MemAlloc(sizeof(Integer) * outModel^.meshCount);
-
-  for meshIndex := 0 to outModel^.meshCount -1 do
-  begin
-    outModel^.meshes[meshIndex] := AModel^.meshes[meshIndex];
-    outModel^.meshMaterial[meshIndex] := AModel^.meshMaterial[meshIndex];
-  end;
-
-  for matIndex := 0 to outModel^.materialCount - 1 do
-  begin
-    outModel^.materials[matIndex] := AModel^.materials[matIndex];
-  end;
-
-//  if FModel <> nil then UnloadModel(FModel);
-  FModel := outModel^;
-
+procedure TSpaceActor.LoadModel(AFileName: PChar);
+begin
+ FModel := raylib.LoadModel(AFilename);
+ //(GetAppDir('data' + '/models/ships/Forwarder.glb'));
 end;
 
 
@@ -1399,7 +1404,7 @@ begin
 
    color := ColorContrast(fill, FTrailEngineBright);
    FBrightTrailColor := Color;
-  // ActorModel.materials[2].maps[MATERIAL_MAP_ALBEDO].color := color;   // toto ship type fix
+   //ActorModel.materials[2].maps[MATERIAL_MAP_ALBEDO].color := color;   // toto ship type fix
 
   rlDrawRenderBatchActive();
   rlEnableDepthMask();

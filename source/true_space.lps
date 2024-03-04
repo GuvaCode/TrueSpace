@@ -7,8 +7,8 @@
       <Unit>
         <Filename Value="true_space.lpr"/>
         <IsPartOfProject Value="True"/>
-        <TopLine Value="66"/>
-        <CursorPos Y="87"/>
+        <TopLine Value="64"/>
+        <CursorPos Y="92"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
       </Unit>
@@ -16,9 +16,10 @@
         <Filename Value="screen/screenspace.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="ScreenSpace"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="4"/>
-        <TopLine Value="231"/>
-        <CursorPos X="6" Y="244"/>
+        <TopLine Value="135"/>
+        <CursorPos X="29" Y="153"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
       </Unit>
@@ -26,9 +27,9 @@
         <Filename Value="engine/spaceengine.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="SpaceEngine"/>
-        <EditorIndex Value="7"/>
-        <TopLine Value="562"/>
-        <CursorPos X="42" Y="576"/>
+        <EditorIndex Value="6"/>
+        <TopLine Value="1211"/>
+        <CursorPos X="32" Y="1223"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
       </Unit>
@@ -44,26 +45,25 @@
         <Filename Value="shaders/toon_light.inc"/>
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="-1"/>
-        <UsageCount Value="169"/>
+        <TopLine Value="4"/>
+        <CursorPos X="15" Y="16"/>
+        <UsageCount Value="190"/>
       </Unit>
       <Unit>
         <Filename Value="engine/global.pas"/>
         <IsPartOfProject Value="True"/>
-        <IsVisibleTab Value="True"/>
-        <EditorIndex Value="8"/>
-        <TopLine Value="22"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="20"/>
         <CursorPos X="34" Y="25"/>
-        <UsageCount Value="126"/>
-        <Loaded Value="True"/>
+        <UsageCount Value="147"/>
       </Unit>
       <Unit>
         <Filename Value="screen/screenloading.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="ScreenLoading"/>
         <EditorIndex Value="1"/>
-        <TopLine Value="81"/>
-        <CursorPos X="52" Y="81"/>
-        <UsageCount Value="126"/>
+        <CursorPos X="29" Y="87"/>
+        <UsageCount Value="147"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
@@ -71,9 +71,8 @@
         <IsPartOfProject Value="True"/>
         <UnitName Value="Ships"/>
         <EditorIndex Value="2"/>
-        <TopLine Value="93"/>
-        <CursorPos Y="109"/>
-        <UsageCount Value="120"/>
+        <CursorPos X="39" Y="7"/>
+        <UsageCount Value="141"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
@@ -81,19 +80,17 @@
         <IsPartOfProject Value="True"/>
         <UnitName Value="WarpGate"/>
         <EditorIndex Value="3"/>
-        <TopLine Value="141"/>
-        <CursorPos X="5" Y="82"/>
-        <UsageCount Value="88"/>
+        <CursorPos X="52" Y="54"/>
+        <UsageCount Value="109"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="engine/screenmanager.pas"/>
         <UnitName Value="ScreenManager"/>
-        <EditorIndex Value="5"/>
-        <TopLine Value="148"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="247"/>
         <CursorPos Y="200"/>
-        <UsageCount Value="38"/>
-        <Loaded Value="True"/>
+        <UsageCount Value="48"/>
       </Unit>
       <Unit>
         <Filename Value="../../GGF/src/gearengine.pas"/>
@@ -101,13 +98,13 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="659"/>
         <CursorPos X="6" Y="682"/>
-        <UsageCount Value="25"/>
+        <UsageCount Value="24"/>
       </Unit>
       <Unit>
         <Filename Value="../../Ray4Laz/source/raylib.pas"/>
-        <EditorIndex Value="6"/>
-        <TopLine Value="1120"/>
-        <CursorPos X="18" Y="1139"/>
+        <EditorIndex Value="5"/>
+        <TopLine Value="2227"/>
+        <CursorPos X="20" Y="2240"/>
         <UsageCount Value="100"/>
         <Loaded Value="True"/>
       </Unit>
@@ -116,7 +113,7 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="6"/>
         <CursorPos X="23" Y="114"/>
-        <UsageCount Value="40"/>
+        <UsageCount Value="39"/>
       </Unit>
       <Unit>
         <Filename Value="extra/digestmath.pas"/>
@@ -124,13 +121,13 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="404"/>
         <CursorPos X="20" Y="91"/>
-        <UsageCount Value="8"/>
+        <UsageCount Value="7"/>
       </Unit>
       <Unit>
         <Filename Value="shaders/skybox.inc"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="69" Y="2"/>
-        <UsageCount Value="18"/>
+        <UsageCount Value="17"/>
       </Unit>
       <Unit>
         <Filename Value="../../GGF/example/Test/unit1.pas"/>
@@ -138,20 +135,20 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="19"/>
         <CursorPos X="21" Y="111"/>
-        <UsageCount Value="5"/>
+        <UsageCount Value="4"/>
       </Unit>
       <Unit>
         <Filename Value="/usr/share/fpcsrc/3.2.2/rtl/inc/objpash.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="449"/>
         <CursorPos X="21" Y="215"/>
-        <UsageCount Value="4"/>
+        <UsageCount Value="3"/>
       </Unit>
       <Unit>
         <Filename Value="../../Ray4Laz/source/raylib.inc"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="33" Y="15"/>
-        <UsageCount Value="24"/>
+        <UsageCount Value="23"/>
       </Unit>
       <Unit>
         <Filename Value="../../GGF/tool/vertView/munit.pas"/>
@@ -159,7 +156,7 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="189"/>
         <CursorPos X="21" Y="198"/>
-        <UsageCount Value="3"/>
+        <UsageCount Value="2"/>
       </Unit>
       <Unit>
         <Filename Value="../../GGF/src/gearcollider.pas"/>
@@ -167,14 +164,14 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="22"/>
         <CursorPos X="3" Y="22"/>
-        <UsageCount Value="21"/>
+        <UsageCount Value="20"/>
       </Unit>
       <Unit>
         <Filename Value="../../Ray4LazExample/Ergo/src/ergo.lpr"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="115"/>
         <CursorPos X="9" Y="117"/>
-        <UsageCount Value="18"/>
+        <UsageCount Value="17"/>
       </Unit>
       <Unit>
         <Filename Value="../../Ray4LazExample/Ergo/src/spaceship.pas"/>
@@ -182,7 +179,7 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="244"/>
         <CursorPos X="21" Y="239"/>
-        <UsageCount Value="18"/>
+        <UsageCount Value="17"/>
       </Unit>
       <Unit>
         <Filename Value="../../../Загрузки/grspaceengine3d.pas"/>
@@ -190,167 +187,151 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="642"/>
         <CursorPos Y="650"/>
-        <UsageCount Value="9"/>
+        <UsageCount Value="8"/>
       </Unit>
       <Unit>
         <Filename Value="../../Ray4Laz/examples/shaders/shaders_simple_mask/shaders_simple_mask.lpr"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="10"/>
         <CursorPos X="26" Y="22"/>
-        <UsageCount Value="9"/>
+        <UsageCount Value="8"/>
       </Unit>
       <Unit>
         <Filename Value="shaders/mask.inc"/>
         <EditorIndex Value="-1"/>
         <CursorPos Y="17"/>
-        <UsageCount Value="68"/>
+        <UsageCount Value="67"/>
       </Unit>
       <Unit>
         <Filename Value="shaders/star.inc"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="7" Y="2"/>
-        <UsageCount Value="2"/>
+        <UsageCount Value="1"/>
       </Unit>
       <Unit>
         <Filename Value="../../../Загрузки/LostInSpace/src/extra/FastGEO.pas"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="12705"/>
         <CursorPos Y="12724"/>
-        <UsageCount Value="3"/>
+        <UsageCount Value="2"/>
       </Unit>
       <Unit>
         <Filename Value="engine/ships_setting.inc"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="61" Y="23"/>
-        <UsageCount Value="62"/>
+        <UsageCount Value="61"/>
       </Unit>
       <Unit>
         <Filename Value="/usr/share/fpcsrc/3.2.2/rtl/objpas/classes/classesh.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="943"/>
         <CursorPos X="27" Y="956"/>
-        <UsageCount Value="28"/>
+        <UsageCount Value="27"/>
       </Unit>
       <Unit>
         <Filename Value="../../Ray4Laz/examples/shaders/shaders_basic_pbr/shaders_basic_pbr.lpr"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="195"/>
         <CursorPos X="58" Y="206"/>
-        <UsageCount Value="13"/>
+        <UsageCount Value="12"/>
       </Unit>
       <Unit>
         <Filename Value="../../GGF/src/grlights.pas"/>
         <UnitName Value="GrLights"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="71" Y="336"/>
-        <UsageCount Value="4"/>
+        <UsageCount Value="3"/>
       </Unit>
       <Unit>
         <Filename Value="engine/lights.pas"/>
         <UnitName Value="Lights"/>
         <EditorIndex Value="-1"/>
-        <TopLine Value="342"/>
+        <TopLine Value="19"/>
         <CursorPos X="36" Y="357"/>
-        <UsageCount Value="17"/>
+        <UsageCount Value="16"/>
       </Unit>
       <Unit>
         <Filename Value="../../Ray4Laz/examples/shaders/shaders_basic_lighting/shaders_basic_lighting.lpr"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="25"/>
         <CursorPos X="44" Y="36"/>
-        <UsageCount Value="5"/>
+        <UsageCount Value="4"/>
       </Unit>
       <Unit>
         <Filename Value="../../Ray4Laz/examples/shaders/shaders_basic_lighting/rlights.pas"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="13"/>
-        <UsageCount Value="5"/>
+        <UsageCount Value="4"/>
       </Unit>
       <Unit>
         <Filename Value="../../Ray4Laz/examples/shaders/shaders_shadowmap/shaders_shadowmap.lpr"/>
-        <EditorIndex Value="10"/>
+        <EditorIndex Value="-1"/>
         <TopLine Value="158"/>
         <CursorPos X="17" Y="183"/>
-        <UsageCount Value="23"/>
-        <Loaded Value="True"/>
+        <UsageCount Value="26"/>
       </Unit>
       <Unit>
         <Filename Value="../../Ray4Laz/examples/shaders/shaders_fog/rlights.pas"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="9" Y="95"/>
-        <UsageCount Value="4"/>
+        <UsageCount Value="3"/>
       </Unit>
       <Unit>
         <Filename Value="../../Ray4Laz/examples/shaders/shaders_fog/shaders_fog.lpr"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="114"/>
         <CursorPos X="23"/>
-        <UsageCount Value="2"/>
+        <UsageCount Value="1"/>
       </Unit>
       <Unit>
         <Filename Value="/usr/share/fpcsrc/3.2.2/rtl/inc/systemh.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="25"/>
         <CursorPos X="45" Y="53"/>
-        <UsageCount Value="5"/>
-      </Unit>
-      <Unit>
-        <Filename Value="../../../.cache/.fr-w8iSxS/mainsaveload.pas"/>
-        <UnitName Value="mainSaveLoad"/>
-        <EditorIndex Value="-1"/>
-        <TopLine Value="47"/>
-        <CursorPos X="20" Y="64"/>
-        <UsageCount Value="0"/>
+        <UsageCount Value="4"/>
       </Unit>
       <Unit>
         <Filename Value="engine/rlights.pas"/>
-        <EditorIndex Value="-1"/>
-        <TopLine Value="63"/>
-        <CursorPos X="42" Y="37"/>
-        <UsageCount Value="8"/>
-      </Unit>
-      <Unit>
-        <Filename Value="../../Ray4Laz/source/rlgl.pas"/>
-        <EditorIndex Value="-1"/>
-        <TopLine Value="752"/>
-        <CursorPos X="36" Y="716"/>
-        <UsageCount Value="0"/>
+        <EditorIndex Value="7"/>
+        <TopLine Value="34"/>
+        <CursorPos X="12" Y="23"/>
+        <UsageCount Value="14"/>
+        <Loaded Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="../../Ray4Laz/source/extras/raygui.pas"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="254"/>
         <CursorPos X="20" Y="342"/>
-        <UsageCount Value="13"/>
+        <UsageCount Value="12"/>
       </Unit>
       <Unit>
         <Filename Value="../../../Загрузки/ellite/project1.lpr"/>
-        <EditorIndex Value="9"/>
+        <EditorIndex Value="-1"/>
         <TopLine Value="85"/>
         <CursorPos X="55" Y="94"/>
-        <UsageCount Value="68"/>
-        <Loaded Value="True"/>
+        <UsageCount Value="71"/>
       </Unit>
       <Unit>
         <Filename Value="../../Ray4Laz/examples/core/core_loading_thread/core_loading_thread.lpr"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="4"/>
         <CursorPos X="57" Y="17"/>
-        <UsageCount Value="8"/>
+        <UsageCount Value="7"/>
       </Unit>
       <Unit>
         <Filename Value="/usr/share/fpcsrc/3.2.2/rtl/inc/compproc.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="371"/>
         <CursorPos X="11" Y="517"/>
-        <UsageCount Value="5"/>
+        <UsageCount Value="4"/>
       </Unit>
       <Unit>
         <Filename Value="/usr/share/fpcsrc/3.2.2/rtl/inc/varianth.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="122"/>
         <CursorPos X="4" Y="95"/>
-        <UsageCount Value="5"/>
+        <UsageCount Value="4"/>
       </Unit>
       <Unit>
         <Filename Value="/usr/share/fpcsrc/3.2.2/packages/rtl-objpas/src/inc/variants.pp"/>
@@ -358,59 +339,60 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="373"/>
         <CursorPos X="30" Y="147"/>
-        <UsageCount Value="5"/>
+        <UsageCount Value="4"/>
       </Unit>
       <Unit>
         <Filename Value="/usr/share/fpcsrc/3.2.2/rtl/inc/rttih.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="14"/>
         <CursorPos X="25" Y="22"/>
-        <UsageCount Value="5"/>
+        <UsageCount Value="4"/>
       </Unit>
       <Unit>
         <Filename Value="/usr/share/fpcsrc/3.2.2/packages/rtl-objpas/src/inc/rtti.pp"/>
         <UnitName Value="Rtti"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="103"/>
-        <UsageCount Value="5"/>
+        <UsageCount Value="4"/>
       </Unit>
       <Unit>
         <Filename Value="/usr/share/fpcsrc/3.2.2/rtl/objpas/sysutils/filutilh.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="214"/>
         <CursorPos X="10" Y="220"/>
-        <UsageCount Value="5"/>
+        <UsageCount Value="4"/>
       </Unit>
       <Unit>
         <Filename Value="/usr/share/fpcsrc/3.2.2/compiler/pinline.pas"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="352"/>
-        <UsageCount Value="5"/>
+        <UsageCount Value="4"/>
       </Unit>
       <Unit>
         <Filename Value="../../Ray4Laz/examples/gui/controls_test_suite/controls_test_suite.lpr"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="61"/>
         <CursorPos X="3" Y="132"/>
-        <UsageCount Value="10"/>
+        <UsageCount Value="9"/>
       </Unit>
       <Unit>
         <Filename Value="/usr/share/fpcsrc/3.2.2/rtl/objpas/sysutils/datih.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="117"/>
         <CursorPos X="10" Y="129"/>
-        <UsageCount Value="8"/>
+        <UsageCount Value="7"/>
       </Unit>
       <Unit>
         <Filename Value="shaders/shadowmap.inc"/>
         <EditorIndex Value="-1"/>
-        <UsageCount Value="8"/>
+        <CursorPos X="11" Y="83"/>
+        <UsageCount Value="15"/>
       </Unit>
       <Unit>
         <Filename Value="../../../Загрузки/Mplayer_ohne_GTK2/mplayercontrollaz.pas"/>
         <UnitName Value="MPlayerControlLaz"/>
         <EditorIndex Value="-1"/>
-        <UsageCount Value="9"/>
+        <UsageCount Value="8"/>
       </Unit>
       <Unit>
         <Filename Value="../../../Загрузки/Mplayer_ohne_GTK2/mplayerctrl.pas"/>
@@ -418,143 +400,150 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="704"/>
         <CursorPos Y="768"/>
-        <UsageCount Value="8"/>
+        <UsageCount Value="7"/>
       </Unit>
       <Unit>
         <Filename Value="/usr/share/fpcsrc/3.2.2/rtl/inc/cmem.pp"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="42"/>
         <CursorPos X="31" Y="46"/>
-        <UsageCount Value="17"/>
+        <UsageCount Value="15"/>
       </Unit>
       <Unit>
         <Filename Value="/usr/share/fpcsrc/3.2.2/rtl/objpas/objpas.pp"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="23"/>
         <CursorPos X="21" Y="28"/>
-        <UsageCount Value="14"/>
+        <UsageCount Value="12"/>
+      </Unit>
+      <Unit>
+        <Filename Value="shaders/light.inc"/>
+        <EditorIndex Value="8"/>
+        <CursorPos X="8" Y="2"/>
+        <UsageCount Value="15"/>
+        <Loaded Value="True"/>
       </Unit>
     </Units>
     <JumpHistory HistoryIndex="29">
       <Position>
         <Filename Value="engine/spaceengine.pas"/>
-        <Caret Line="127" Column="3" TopLine="114"/>
+        <Caret Line="90" Column="19"/>
       </Position>
       <Position>
         <Filename Value="engine/spaceengine.pas"/>
-        <Caret Line="39" Column="3" TopLine="35"/>
+        <Caret Line="104" Column="23" TopLine="92"/>
       </Position>
       <Position>
         <Filename Value="engine/spaceengine.pas"/>
-        <Caret Line="179" Column="42" TopLine="165"/>
+        <Caret Line="607" Column="16" TopLine="595"/>
       </Position>
       <Position>
         <Filename Value="engine/spaceengine.pas"/>
-        <Caret Line="1151" Column="3" TopLine="1138"/>
+        <Caret Line="620" Column="20" TopLine="573"/>
       </Position>
       <Position>
         <Filename Value="engine/spaceengine.pas"/>
-        <Caret Line="179" Column="26" TopLine="168"/>
+        <Caret Line="110" Column="21" TopLine="102"/>
+      </Position>
+      <Position>
+        <Filename Value="engine/spaceengine.pas"/>
+        <Caret Line="736" TopLine="724"/>
+      </Position>
+      <Position>
+        <Filename Value="engine/spaceengine.pas"/>
+        <Caret Line="755" Column="3" TopLine="743"/>
+      </Position>
+      <Position>
+        <Filename Value="engine/spaceengine.pas"/>
+        <Caret Line="679" Column="25" TopLine="670"/>
+      </Position>
+      <Position>
+        <Filename Value="engine/spaceengine.pas"/>
+        <Caret Line="772" Column="5" TopLine="833"/>
+      </Position>
+      <Position>
+        <Filename Value="engine/spaceengine.pas"/>
+        <Caret Line="757" Column="19" TopLine="745"/>
+      </Position>
+      <Position>
+        <Filename Value="engine/spaceengine.pas"/>
+        <Caret Line="650" Column="53" TopLine="637"/>
+      </Position>
+      <Position>
+        <Filename Value="engine/spaceengine.pas"/>
+        <Caret Line="110" Column="21" TopLine="98"/>
+      </Position>
+      <Position>
+        <Filename Value="engine/spaceengine.pas"/>
+        <Caret Line="651" Column="51" TopLine="649"/>
+      </Position>
+      <Position>
+        <Filename Value="engine/spaceengine.pas"/>
+        <Caret Line="696" Column="40" TopLine="683"/>
+      </Position>
+      <Position>
+        <Filename Value="engine/spaceengine.pas"/>
+        <Caret Line="181" Column="21" TopLine="170"/>
+      </Position>
+      <Position>
+        <Filename Value="engine/spaceengine.pas"/>
+        <Caret Line="1153" Column="52" TopLine="1151"/>
+      </Position>
+      <Position>
+        <Filename Value="engine/spaceengine.pas"/>
+        <Caret Line="251" Column="21" TopLine="239"/>
+      </Position>
+      <Position>
+        <Filename Value="engine/spaceengine.pas"/>
+        <Caret Line="1494" Column="29" TopLine="1491"/>
+      </Position>
+      <Position>
+        <Filename Value="engine/spaceengine.pas"/>
+        <Caret Line="696" Column="56" TopLine="684"/>
+      </Position>
+      <Position>
+        <Filename Value="engine/spaceengine.pas"/>
+        <Caret Line="720" Column="60" TopLine="708"/>
+      </Position>
+      <Position>
+        <Filename Value="engine/spaceengine.pas"/>
+        <Caret Line="765" Column="14" TopLine="636"/>
       </Position>
       <Position>
         <Filename Value="screen/screenspace.pas"/>
-        <Caret Line="333" Column="52" TopLine="327"/>
+        <Caret Line="153" Column="28" TopLine="133"/>
       </Position>
       <Position>
         <Filename Value="engine/spaceengine.pas"/>
-        <Caret Line="1154" TopLine="1144"/>
+        <Caret Line="751" Column="16" TopLine="738"/>
       </Position>
       <Position>
         <Filename Value="engine/spaceengine.pas"/>
-        <Caret Line="1149" Column="44" TopLine="1147"/>
+        <Caret Line="750" Column="5" TopLine="738"/>
       </Position>
       <Position>
         <Filename Value="engine/spaceengine.pas"/>
-        <Caret Line="179" Column="36" TopLine="168"/>
+        <Caret Line="175" Column="54" TopLine="170"/>
+      </Position>
+      <Position>
+        <Filename Value="../../Ray4Laz/source/raylib.pas"/>
+        <Caret Line="2240" Column="45" TopLine="2218"/>
       </Position>
       <Position>
         <Filename Value="engine/spaceengine.pas"/>
-        <Caret Line="1173" Column="22" TopLine="1149"/>
+        <Caret Line="996" Column="2" TopLine="809"/>
       </Position>
       <Position>
         <Filename Value="engine/spaceengine.pas"/>
-        <Caret Line="1171" Column="3" TopLine="1162"/>
+        <Caret Line="183" Column="26" TopLine="176"/>
       </Position>
       <Position>
-        <Filename Value="engine/spaceengine.pas"/>
-        <Caret Line="1172" Column="14" TopLine="1160"/>
+        <Filename Value="../../Ray4Laz/source/raylib.pas"/>
+        <Caret Line="2350" Column="20" TopLine="2345"/>
       </Position>
       <Position>
-        <Filename Value="screen/screenspace.pas"/>
-        <Caret Line="385" Column="40" TopLine="373"/>
-      </Position>
-      <Position>
-        <Filename Value="screen/screenspace.pas"/>
-        <Caret Line="302" Column="83" TopLine="284"/>
-      </Position>
-      <Position>
-        <Filename Value="screen/screenspace.pas"/>
-        <Caret Line="66" Column="59" TopLine="61"/>
-      </Position>
-      <Position>
-        <Filename Value="screen/screenspace.pas"/>
-        <Caret Line="34" Column="31" TopLine="21"/>
-      </Position>
-      <Position>
-        <Filename Value="engine/spaceengine.pas"/>
-        <Caret Line="115" Column="71" TopLine="102"/>
-      </Position>
-      <Position>
-        <Filename Value="engine/spaceengine.pas"/>
-        <Caret Line="936" TopLine="914"/>
-      </Position>
-      <Position>
-        <Filename Value="screen/screenspace.pas"/>
-        <Caret Line="244" Column="16" TopLine="228"/>
-      </Position>
-      <Position>
-        <Filename Value="engine/spaceengine.pas"/>
-        <Caret Line="669" Column="27" TopLine="660"/>
-      </Position>
-      <Position>
-        <Filename Value="engine/spaceengine.pas"/>
-        <Caret Line="743" Column="27" TopLine="735"/>
-      </Position>
-      <Position>
-        <Filename Value="engine/spaceengine.pas"/>
-        <Caret Line="744" Column="59" TopLine="735"/>
-      </Position>
-      <Position>
-        <Filename Value="engine/spaceengine.pas"/>
-        <Caret Line="745" Column="62" TopLine="735"/>
-      </Position>
-      <Position>
-        <Filename Value="engine/spaceengine.pas"/>
-        <Caret Line="752" Column="28" TopLine="735"/>
-      </Position>
-      <Position>
-        <Filename Value="engine/spaceengine.pas"/>
-        <Caret Line="753" Column="60" TopLine="735"/>
-      </Position>
-      <Position>
-        <Filename Value="engine/spaceengine.pas"/>
-        <Caret Line="754" Column="59" TopLine="735"/>
-      </Position>
-      <Position>
-        <Filename Value="engine/spaceengine.pas"/>
-        <Caret Line="87" Column="12" TopLine="85"/>
-      </Position>
-      <Position>
-        <Filename Value="engine/spaceengine.pas"/>
-        <Caret Line="449" Column="49" TopLine="443"/>
-      </Position>
-      <Position>
-        <Filename Value="engine/spaceengine.pas"/>
-        <Caret Line="477" Column="52" TopLine="471"/>
-      </Position>
-      <Position>
-        <Filename Value="engine/spaceengine.pas"/>
-        <Caret Line="576" Column="42" TopLine="562"/>
+        <Filename Value="../../Ray4Laz/source/raylib.pas"/>
+        <Caret Line="2240" Column="20" TopLine="2227"/>
       </Position>
     </JumpHistory>
     <RunParams>

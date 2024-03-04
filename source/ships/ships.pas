@@ -4,7 +4,7 @@ unit Ships;
 
 interface
 uses
-  RayLib, RayMath, SpaceEngine, Global, Classes, SysUtils;
+  RayLib, RayMath, rlGl, SpaceEngine, Global, Classes, SysUtils;
 
 type // Enumerate ship type
   TSpaceShipType = (stNone, stChallenger, stForwarder, stStriker);
@@ -103,16 +103,27 @@ end;
 procedure TSpaceShip.Update(const DeltaTime: Single);
 begin
   inherited Update(DeltaTime);
-  if ActorModel.materialCount >= 2 then
-  case FShipType of
-    stChallenger, stForwarder, stStriker:
-    ActorModel.materials[2].maps[MATERIAL_MAP_ALBEDO].color := BrightTrailColor;
-  end;
+
 end;
 
 procedure TSpaceShip.Render(ShowDebugAxes: Boolean; ShowDebugRay: Boolean);
 begin
   inherited Render(ShowDebugAxes, ShowDebugRay);
+
+  BeginBlendMode(BLEND_ALPHA);
+  rlDisableDepthMask();
+
+  if ActorModel.materialCount >= 2 then
+  case FShipType of
+    stChallenger, stForwarder, stStriker:
+    ActorModel.materials[2].maps[MATERIAL_MAP_ALBEDO].color := BrightTrailColor;
+  end;
+
+  rlDrawRenderBatchActive();
+  rlEnableDepthMask();
+  rlEnableDepthTest;
+  EndBlendMode();
+
 end;
 
 end.
