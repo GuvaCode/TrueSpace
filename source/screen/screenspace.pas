@@ -150,7 +150,7 @@ begin
 
   Engine.DrawRadar := True;
   //Engine.OutlineShader:= False;
-  Engine.ShadowLight:= False;
+  Engine.ShadowLight:= TRUE;
 
   Camera := TSpaceCamera.Create(True, 50);
 

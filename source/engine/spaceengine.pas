@@ -559,10 +559,10 @@ begin
   SetShaderValue(shadowShader, lightColLoc, @lightColorNormalized, SHADER_UNIFORM_VEC4);
 
   ambientLoc := GetShaderLocation(shadowShader, 'ambient');
-    ambient[0] := 1.0;
-    ambient[1] := 1.0;
-    ambient[2] := 1.0;
-    ambient[3] := 1.0;
+  ambient[0] := 0.1;
+  ambient[1] := 0.1;
+  ambient[2] := 0.1;
+  ambient[3] := 1.0;
   SetShaderValue(shadowShader, ambientLoc, @ambient, SHADER_UNIFORM_VEC4);
 
   lightVPLoc := GetShaderLocation(shadowShader, 'lightVP');
@@ -595,6 +595,7 @@ var i: integer;
 begin
   for i := 0 to FActorList.Count - 1 do
   begin
+
     TSpaceActor(FActorList.Items[i]).Dead;
   end;
 
@@ -1411,8 +1412,6 @@ begin
   rlEnableDepthTest;
   EndBlendMode();
 end;
-
-
 
 constructor TSpaceShipActor.Create(const AParent: TSpaceEngine);
 begin

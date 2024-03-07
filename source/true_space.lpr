@@ -10,7 +10,7 @@ uses
   {$ENDIF}
   Classes, SysUtils, CustApp, RayLib,
   ScreenManager, ScreenSpace, ScreenLoading, SpaceEngine,
-  Global, Ships, WarpGate;
+  Global, Ships, WarpGate, unit1;
 
 type
   { TRayApplication }
