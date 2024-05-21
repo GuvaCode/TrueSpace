@@ -124,10 +124,12 @@ end;
 constructor TWarpIn.Create(const AParent: TSpaceEngine);
 begin
   inherited Create(AParent);
-  Engine := AParent;
+ // Engine := AParent;
   FModel := raylib.LoadModel(GetAppDir('data' + '/models/building/warp_in.glb'));
-  DoCollision:=False;
+  Engine := AParent;
+  DoCollision:=True;
   //scale := 0.8;
+  CreateModelCollider;
 end;
 
 destructor TWarpIn.Destroy;
@@ -158,9 +160,11 @@ end;
 constructor TWarpOut.Create(const AParent: TSpaceEngine);
 begin
   inherited Create(AParent);
-  Engine := AParent;
+
   FModel := raylib.LoadModel(GetAppDir('data' + '/models/building/warp_out.glb'));
-  DoCollision:=False;
+ // DoCollision:=True;
+ Engine := AParent;
+ CreateModelCollider;
 end;
 
 destructor TWarpOut.Destroy;

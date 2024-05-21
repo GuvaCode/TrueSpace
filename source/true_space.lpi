@@ -73,7 +73,6 @@
       <Unit>
         <Filename Value="shaders/lighting.inc"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="Unit1"/>
       </Unit>
     </Units>
   </ProjectOptions>

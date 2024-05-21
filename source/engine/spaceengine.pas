@@ -161,8 +161,10 @@ type
     procedure SetModel(AValue: TModel);
     procedure SetPosition(AValue: TVector3);
     procedure SetScale(AValue: Single);
+
   protected
     FModel: TModel;
+    procedure CreateModelCollider;
   public
     InputForward: Single;
     InputLeft: Single;
@@ -990,6 +992,11 @@ procedure TSpaceActor.SetScale(AValue: Single);
 begin
   if FScale=AValue then Exit;
   FScale:=AValue;
+  CreateModelCollider;
+end;
+
+procedure TSpaceActor.CreateModelCollider;
+begin
   FCollider := CreateCollider(Vector3Scale(GetModelBoundingBox(FModel).min,FScale),
                               Vector3Scale(GetModelBoundingBox(FModel).max,FScale));
 end;
@@ -1011,6 +1018,7 @@ begin
   TurnRate:= 180;
   TurnResponse:= 10;
   FAlignToHorizon := True;
+  CreateModelCollider;
   Engine.Add(Self);
 end;
 
@@ -1029,12 +1037,14 @@ end;
 }
 
 procedure TSpaceActor.Collision(const Other: TSpaceActor);
-var IsCollide: Boolean; Correction: TVector3;
+var IsCollide: Boolean; Correction, Disp: TVector3; dt: Single;
 begin
   IsCollide := false;
 
-  SetColliderRotation(@FCollider, FVisualRotation);
-  SetColliderTranslation(@FCollider, FPosition);
+  dt := Clamp(GetFrameTime(), 0.0, 0.01 / Single(GetFps) );
+
+  Disp := Vector3Scale(Self.Velocity, dt);
+  AddColliderTranslation(@FCollider, Disp);
 
   Correction := GetCollisionCorrection(@FCollider, @Other.FCollider);
   AddColliderTranslation(@FCollider, Correction);
@@ -1043,8 +1053,13 @@ begin
 
   if IsCollide then
   begin
+
     FPosition := Vector3Transform(Vector3Zero, Fcollider.matTranslate);
     Other.FPosition := Vector3Transform(Vector3Zero, Other.FCollider.matTranslate);
+
+//    FModel.transform := GetColliderTransform(@FCollider);
+ //   Other.FModel.transform := GetColliderTransform(@Other.FCollider);
+
 
     OnCollision(Other);
     Other.OnCollision(Self);
@@ -1073,7 +1088,7 @@ end;
 
 procedure TSpaceActor.OnCollision(const Actor: TSpaceActor);
 begin
- // FPosition := Vector3Transform(Vector3Zero, Fcollider.matTranslate);
+  FPosition := Vector3Transform(Vector3Zero, Fcollider.matTranslate);
 end;
 
 procedure TSpaceActor.Update(const DeltaTime: Single);
@@ -1081,6 +1096,7 @@ var forwardSpeedMultipilier, autoSteerInput, targetVisualBank: single;
     targetVelocity: TVector3;
     transform: TMatrix;
 begin
+
   // Give the ship some momentum when accelerating. Придать кораблю импульс при ускорении.
   FSmoothForward := SmoothDamp(FSmoothForward, InputForward, ThrottleResponse, deltaTime);
   FSmoothLeft := SmoothDamp(FSmoothLeft, InputLeft, ThrottleResponse, deltaTime);
@@ -1131,14 +1147,22 @@ begin
   // doesn't have to happen at the render stage.
   //Ru: Синхронизируем представление модели в raylib с позицией корабля
   // не обязательно на этапе рендеринга.
+
   transform := MatrixTranslate(FPosition.x, FPosition.y, FPosition.z);
   transform := MatrixMultiply(QuaternionToMatrix(FvisualRotation), transform);
   transform := MatrixMultiply(MatrixScale(Scale,Scale,Scale),transform);
-  //FModel.transform := transform;
-  SetColliderRotation(@self.FCollider, FvisualRotation);
-  SetColliderTranslation(@self.FCollider, Self.FPosition);
+  FModel.transform := transform;
 
-  FModel.transform := MatrixMultiply(MatrixScale(FScale,FScale,FScale),GetColliderTransform(@FCollider));
+ // SetColliderTranslation(@self.FCollider, Self.FPosition);
+ // SetColliderRotation(@self.FCollider, FvisualRotation);
+   SetColliderTranslation(@FCollider, FPosition);
+   SetColliderRotation(@FCollider, FvisualRotation);
+
+
+   FPosition := Vector3Transform(Vector3Zero, Fcollider.matTranslate);
+    //   Other.FPosition := Vector3Transform(Vector3Zero, Other.FCollider.matTranslate);
+
+ // FModel.transform := MatrixMultiply(MatrixScale(FScale,FScale,FScale),GetColliderTransform(@FCollider));
 
   // TODO
   FRay.direction := GetForward;
@@ -1186,7 +1210,7 @@ begin
      //                    FModel.meshes[1].vertices[2 * 3 + 2]);
 
 
-    DrawCubeV(Vector3Transform(vec, FModel.transform),Vector3Create(0.01,0.01,0.01),Green);
+    //DrawCubeV(Vector3Transform(vec, FModel.transform),Vector3Create(0.01,0.01,0.01),Green);
 
 
     DrawLine3D(FCollider.vertGlobal[0], FCollider.vertGlobal[1], SKYBLUE);
@@ -1209,7 +1233,7 @@ begin
 
     EndBlendMode();
    end;
-  if (ShowDebugRay) then DrawRay(FRay, WHITE);
+ // if (ShowDebugRay) then DrawRay(FRay, WHITE);
 end;
 
 procedure TSpaceActor.SetShader(Shader: TShader);
@@ -1222,11 +1246,13 @@ end;
 procedure TSpaceActor.AssignModel(AModel: PModel);
 begin
   FModel := ModelClone(AModel);
+  CreateModelCollider;
 end;
 
 procedure TSpaceActor.LoadModel(AFileName: PChar);
 begin
  FModel := raylib.LoadModel(AFilename);
+ CreateModelCollider;
  //(GetAppDir('data' + '/models/ships/Forwarder.glb'));
 end;
 
@@ -1464,7 +1490,7 @@ procedure TSpaceShipActor.Render(ShowDebugAxes: Boolean; ShowDebugRay: Boolean);
 begin
   inherited Render(ShowDebugAxes, ShowDebugRay);
   DrawTrail;
-  DrawCubeV(Vector3Transform(GetTrailVector3(1 , 66 , 67, 68) ,FModel.transform),Vector3Create(0.01,0.01,0.01),RED);
+//  DrawCubeV(Vector3Transform(GetTrailVector3(1 , 66 , 67, 68) ,FModel.transform),Vector3Create(0.01,0.01,0.01),RED);
 end;
 
 procedure TSpaceShipActor.SetTrailLeftPoint(NumberPoint: Integer;

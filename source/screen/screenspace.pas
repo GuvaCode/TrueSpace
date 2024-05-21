@@ -1,7 +1,7 @@
 unit ScreenSpace;
 
 {$mode ObjFPC}{$H+}
-{.$define DEBUG}
+{$define DEBUG}
 
 
 interface
@@ -150,7 +150,7 @@ begin
 
   Engine.DrawRadar := True;
   //Engine.OutlineShader:= False;
-  Engine.ShadowLight:= TRUE;
+  Engine.ShadowLight:= False;
 
   Camera := TSpaceCamera.Create(True, 50);
 
@@ -208,10 +208,12 @@ begin
 
   WarpIn := TWarpIn.Create(Engine);
   WarpIn.Position := Vector3Create(20,0,0);
+  //WarpIn.DoCollision:=True;
+
 
   WarpOut := TWarpOut.Create(Engine);
   WarpOut.Position := Vector3Create(20,0,0);
-
+  WarpOut.DoCollision:=False;
 
 
   //GetWorldToScreen(
@@ -302,8 +304,12 @@ begin
             lDir.y -= cameraSpeed * 5 * MoveCount;
       end;
 
-     Engine.LightPosition :=  Vector3Create(30,8,30);
-     Engine.LightDir :=   WarpGlow.GetForward(Vector3Distance(Engine.LightPosition, WarpGlow.Position ));
+    // Engine.LightPosition :=  Vector3Create(30,8,30);
+    // Engine.LightDir :=   WarpGlow.GetForward(Vector3Distance(Engine.LightPosition, WarpGlow.Position ));
+
+
+
+
 end;
 
 procedure TScreenSpace.Render;
@@ -331,9 +337,7 @@ begin
 end;
 
 procedure TScreenSpace.Show;
-var Ship22: array [0..1] of TSpaceShip;
-    TempMaterial: TMaterial;
-    i: integer;
+
 begin
   inherited Show;
 //  HideCursor;
@@ -341,53 +345,10 @@ begin
   Ship.SetShipTexture(1, MATERIAL_MAP_DIFFUSE, FModelAtlas[GetRandomValue(0,23)]);
 
 
-  Ship22[0] := TSpaceShip.Create(Engine);
-  Ship22[0].LoadModel(GetAppDir('data' + '/models/ships/Striker.glb'));
-  Ship22[0].Position := Vector3Create(8,8,-8);
-  Ship22[0].DoCollision:= TRUE;
-  Ship22[0].RadarColor := BLUE;
-  Ship22[0].RadarStrinig:='Neutral';
-  Ship22[0].Scale:=5.1;
-  Ship22[0].Tag:=12;
-  Ship22[0].SetShipTexture(1,MATERIAL_MAP_DIFFUSE, FModelAtlas[GetRandomValue(0,23)]);
 
-  Ship.AssignModel(@Ship22[0].ActorModel);
-  Ship.Scale:=3;
+//  Ship.AssignModel(@Ship22[0].ActorModel);
+ // Ship.Scale:=3;
 
-  TempMaterial := Ship22[0].ActorModel.materials^;
-  Ship22[1] := TSpaceShip.Create(Engine);
-
-
-  Ship22[1].AssignModel(@Ship22[0].ActorModel);
-  //(Ship22[1].ActorModel.materials^);
-
-//  for i:= 0 to Ship22[0].ActorModel.meshCount-1 do
-//  Ship22[1].ActorModel.meshes[i] := Ship22[0].ActorModel.meshes[i];
-  //LoadModelFromMesh( Ship22[0].ActorModel.meshes[1]);//  LoadModel(GetAppDir('data' + '/models/ships/Striker.glb'));
-
-
-
-
- { Ship22[1].ActorModel.materials^:=TempMaterial;
-
-
-  for i:= 0 to Ship22[0].ActorModel.meshCount-1 do
-  SetModelMeshMaterial(@Ship22[1].ActorModel  ,i, MATERIAL_MAP_DIFFUSE);
-    }
-
-
-  Ship22[1].Position := Vector3Create(8, 6,- 9);
-  Ship22[1].DoCollision:= TRUE;
-  Ship22[1].RadarColor := BLUE;
-
-  Ship22[1].RadarStrinig:='Neutral';
-  Ship22[1].Scale:=5.1;
-  Ship22[1].Tag:=13;
-//  Ship22[1].SetShipTexture(0,MATERIAL_MAP_DIFFUSE, FModelAtlas[GetRandomValue(0,23)]);
-
-  //  Ship22[1].BrightTrailColor := BLUE;
-  // Ship22[1].TrailColor := BLUE;
-  //Ship22[0].SetShipTexture(0,MATERIAL_MAP_DIFFUSE, FModelAtlas[GetRandomValue(0,23)]);
 end;
 
 procedure TScreenSpace.Hide;
