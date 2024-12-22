@@ -2,7 +2,7 @@
 <CONFIG>
   <ProjectSession>
     <Version Value="12"/>
-    <BuildModes Active="Default"/>
+    <BuildModes Active="Debug"/>
     <Units>
       <Unit>
         <Filename Value="true_space.lpr"/>
@@ -27,7 +27,7 @@
         <Filename Value="engine/spaceengine.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="SpaceEngine"/>
-        <EditorIndex Value="5"/>
+        <EditorIndex Value="4"/>
         <TopLine Value="1150"/>
         <CursorPos X="55" Y="1153"/>
         <UsageCount Value="200"/>
@@ -72,7 +72,7 @@
         <UnitName Value="Ships"/>
         <EditorIndex Value="1"/>
         <TopLine Value="70"/>
-        <CursorPos X="23" Y="53"/>
+        <CursorPos X="18" Y="53"/>
         <UsageCount Value="155"/>
         <Loaded Value="True"/>
       </Unit>
@@ -110,19 +110,17 @@
       </Unit>
       <Unit>
         <Filename Value="../../Ray4Laz/source/raylib.pas"/>
-        <EditorIndex Value="4"/>
+        <EditorIndex Value="-1"/>
         <TopLine Value="83"/>
         <CursorPos X="28" Y="96"/>
         <UsageCount Value="100"/>
-        <Loaded Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="../../Ray4Laz/source/raymath.pas"/>
-        <EditorIndex Value="6"/>
+        <EditorIndex Value="-1"/>
         <TopLine Value="334"/>
         <CursorPos X="30" Y="344"/>
         <UsageCount Value="41"/>
-        <Loaded Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="extra/digestmath.pas"/>
@@ -301,7 +299,7 @@
       </Unit>
       <Unit>
         <Filename Value="engine/rlights.pas"/>
-        <EditorIndex Value="8"/>
+        <EditorIndex Value="6"/>
         <TopLine Value="23"/>
         <CursorPos X="12" Y="23"/>
         <UsageCount Value="21"/>
@@ -427,17 +425,17 @@
       </Unit>
       <Unit>
         <Filename Value="shaders/light.inc"/>
-        <EditorIndex Value="9"/>
-        <CursorPos X="92" Y="9"/>
+        <EditorIndex Value="7"/>
+        <CursorPos X="34" Y="9"/>
         <UsageCount Value="21"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="engine/collider.pas"/>
         <UnitName Value="Collider"/>
-        <EditorIndex Value="7"/>
+        <EditorIndex Value="5"/>
         <TopLine Value="208"/>
-        <CursorPos X="40" Y="307"/>
+        <CursorPos X="39" Y="307"/>
         <UsageCount Value="12"/>
         <Loaded Value="True"/>
       </Unit>
